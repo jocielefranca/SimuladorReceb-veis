@@ -19,7 +19,7 @@
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -41,7 +41,7 @@
         
         .content {
             display: grid;
-            grid-template-columns: 1fr 2fr;
+            grid-template-columns: 1fr 3fr;
             gap: 30px;
             padding: 30px;
         }
@@ -128,6 +128,11 @@
             border-left: 4px solid #3498db;
         }
         
+        .result-card.negative {
+            border-left-color: #e74c3c;
+            background: #fff5f5;
+        }
+        
         .result-value {
             font-size: 1.5rem;
             font-weight: bold;
@@ -145,28 +150,30 @@
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 3px 15px rgba(0,0,0,0.08);
-            max-height: 500px;
+            max-height: 600px;
             overflow-y: auto;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 0.9rem;
         }
         
         th {
             background: #34495e;
             color: white;
-            padding: 15px 12px;
+            padding: 12px 8px;
             text-align: left;
             font-weight: 600;
             position: sticky;
             top: 0;
             z-index: 10;
+            font-size: 0.85rem;
         }
         
         td {
-            padding: 12px;
+            padding: 10px 8px;
             border-bottom: 1px solid #ecf0f1;
         }
         
@@ -187,17 +194,50 @@
             color: #e74c3c;
         }
         
-        @media (max-width: 768px) {
+        .total-row {
+            background: #2c3e50 !important;
+            color: white !important;
+            font-weight: bold;
+        }
+        
+        .total-row td {
+            border-bottom: 2px solid #34495e;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #856404;
+        }
+        
+        .warning strong {
+            color: #dc3545;
+        }
+        
+        @media (max-width: 1200px) {
             .content {
                 grid-template-columns: 1fr;
             }
-            
+        }
+        
+        @media (max-width: 768px) {
             .input-row {
                 grid-template-columns: 1fr;
             }
             
             .results-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            
+            table {
+                font-size: 0.8rem;
+            }
+            
+            th, td {
+                padding: 8px 4px;
             }
         }
     </style>
@@ -259,12 +299,39 @@
                     </div>
                     
                     <div class="input-group">
-                        <label>Sistema:</label>
-                        <select id="sistema">
-                            <option value="SAC" selected>SAC</option>
-                            <option value="PRICE">PRICE</option>
+                        <label>Parcelas da Entrada:</label>
+                        <select id="parcelasEntrada">
+                            <option value="24">24x</option>
+                            <option value="30">30x</option>
+                            <option value="36" selected>36x</option>
+                            <option value="42">42x</option>
+                            <option value="48">48x</option>
+                            <option value="54">54x</option>
+                            <option value="60">60x</option>
                         </select>
                     </div>
+                </div>
+
+                <h2 class="section-title">Reajustes da Entrada</h2>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>INCC (% ao ano - durante obra):</label>
+                        <input type="number" id="inccAnual" value="4.5" min="0" max="20" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>IPCA+1% (% ao ano - pós obra):</label>
+                        <input type="number" id="ipcaAnual" value="5.5" min="0" max="20" step="0.1">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label>Sistema:</label>
+                    <select id="sistema">
+                        <option value="SAC" selected>SAC</option>
+                        <option value="PRICE">PRICE</option>
+                    </select>
                 </div>
                 
                 <button class="btn-simulate" onclick="simular()">Simular Fluxo de Caixa</button>
@@ -290,9 +357,28 @@
                     </div>
                     
                     <div class="result-card">
-                        <div class="result-value" id="capitalGiro">R$ 0</div>
-                        <div class="result-label">Capital de Giro</div>
+                        <div class="result-value" id="parcelaEntrada">R$ 0</div>
+                        <div class="result-label">Parcela Inicial</div>
                     </div>
+                    
+                    <div class="result-card">
+                        <div class="result-value" id="parcelaFinal">R$ 0</div>
+                        <div class="result-label">Parcela Final</div>
+                    </div>
+                    
+                    <div class="result-card negative">
+                        <div class="result-value" id="capitalGiroMax">R$ 0</div>
+                        <div class="result-label">Capital de Giro Máx.</div>
+                    </div>
+                    
+                    <div class="result-card negative">
+                        <div class="result-value" id="mesCapitalGiro">Mês 0</div>
+                        <div class="result-label">Pior Mês</div>
+                    </div>
+                </div>
+                
+                <div id="warningCapital" class="warning" style="display: none;">
+                    <strong>⚠️ Atenção!</strong> Será necessário capital de giro para cobrir o fluxo negativo.
                 </div>
                 
                 <div class="table-container">
@@ -303,9 +389,10 @@
                                 <th>Vendas Acum.</th>
                                 <th>Unid. Vencidas</th>
                                 <th>% Medição</th>
-                                <th>Recebimento</th>
-                                <th>Entrada Clientes</th>
+                                <th>Receb. Caixa</th>
+                                <th>Entrada Reajustada</th>
                                 <th>Total Mês</th>
+                                <th>Acumulado</th>
                             </tr>
                         </thead>
                         <tbody id="fluxoTable">
@@ -358,6 +445,22 @@
             return Math.min(acumulado, 100);
         }
         
+        function calcularParcelaReajustada(valorInicial, mes, prazoObra, inccMensal, ipcaMensal) {
+            let valorReajustado = valorInicial;
+            
+            for (let i = 1; i < mes; i++) {
+                if (i <= prazoObra) {
+                    // Durante a obra: INCC
+                    valorReajustado *= (1 + inccMensal);
+                } else {
+                    // Após a obra: IPCA + 1%
+                    valorReajustado *= (1 + ipcaMensal);
+                }
+            }
+            
+            return valorReajustado;
+        }
+        
         function simular() {
             const unidades = parseInt(document.getElementById('unidades').value);
             const valorUnidade = parseFloat(document.getElementById('valorUnidade').value);
@@ -366,52 +469,95 @@
             const diasVencimento = parseInt(document.getElementById('diasVencimento').value);
             const faixaMCMV = document.getElementById('faixaMCMV').value;
             const entradaCliente = parseFloat(document.getElementById('entradaCliente').value);
+            const parcelasEntrada = parseInt(document.getElementById('parcelasEntrada').value);
+            const inccAnual = parseFloat(document.getElementById('inccAnual').value) / 100;
+            const ipcaAnual = parseFloat(document.getElementById('ipcaAnual').value) / 100;
+            
+            // Conversão para taxas mensais
+            const inccMensal = Math.pow(1 + inccAnual, 1/12) - 1;
+            const ipcaMensal = Math.pow(1 + ipcaAnual, 1/12) - 1;
             
             const faixa = dadosFaixas[faixaMCMV];
             const vgvTotal = unidades * valorUnidade;
             const subsidioTotal = unidades * faixa.subsidio;
             const valorFinanciadoTotal = unidades * (valorUnidade - entradaCliente - faixa.subsidio);
             const entradaTotalClientes = unidades * entradaCliente;
+            const valorParcelaInicialEntrada = entradaCliente / parcelasEntrada;
+            
+            // Calcular parcela final (com todos os reajustes)
+            const parcelaFinalEntrada = calcularParcelaReajustada(valorParcelaInicialEntrada, parcelasEntrada, prazoObra, inccMensal, ipcaMensal);
             
             // Atualizar cards de resultado
             document.getElementById('vgvTotal').textContent = formatCurrency(vgvTotal);
             document.getElementById('valorFinanciado').textContent = formatCurrency(valorFinanciadoTotal);
             document.getElementById('subsidioTotal').textContent = formatCurrency(subsidioTotal);
-            document.getElementById('capitalGiro').textContent = formatCurrency(vgvTotal * 0.45);
+            document.getElementById('parcelaEntrada').textContent = formatCurrency(valorParcelaInicialEntrada);
+            document.getElementById('parcelaFinal').textContent = formatCurrency(parcelaFinalEntrada);
             
             // Calcular fluxo mês a mês
             const fluxoMensal = [];
             let vendasAcumuladas = 0;
             let unidadesVencidas = 0;
-            let entradaRecebidaAcumulada = 0;
+            let fluxoAcumulado = 0;
+            let capitalGiroMaximo = 0;
+            let mesCapitalGiroMaximo = 0;
             const mesesVencimento = Math.ceil(diasVencimento / 30);
             
-            for (let mes = 1; mes <= prazoObra; mes++) {
-                // Vendas do mês
-                const vendasMes_atual = Math.min(vendasMes, unidades - vendasAcumuladas);
-                vendasAcumuladas += vendasMes_atual;
+            // Estender o período para capturar todas as parcelas
+            const periodoTotal = Math.max(prazoObra, parcelasEntrada);
+            
+            for (let mes = 1; mes <= periodoTotal; mes++) {
+                // Vendas do mês (só durante o período de vendas)
+                let vendasMes_atual = 0;
+                if (mes <= prazoObra && vendasAcumuladas < unidades) {
+                    vendasMes_atual = Math.min(vendasMes, unidades - vendasAcumuladas);
+                    vendasAcumuladas += vendasMes_atual;
+                }
                 
                 // Unidades vencidas (com delay)
                 if (mes > mesesVencimento) {
                     const mesVenda = mes - mesesVencimento;
-                    if (mesVenda >= 1) {
-                        const vendasMesAnterior = Math.min(vendasMes, unidades - ((mesVenda - 1) * vendasMes));
-                        unidadesVencidas = Math.min(unidadesVencidas + vendasMesAnterior, unidades);
+                    if (mesVenda >= 1 && mesVenda <= prazoObra) {
+                        const vendasMesPassado = Math.min(vendasMes, unidades - Math.max(0, (mesVenda - 1) * vendasMes));
+                        const novasVencidas = Math.min(vendasMesPassado, unidades - unidadesVencidas);
+                        unidadesVencidas += novasVencidas;
                     }
                 }
                 
-                // Entrada de clientes do mês
-                const entradaMes = vendasMes_atual * entradaCliente;
-                entradaRecebidaAcumulada += entradaMes;
+                // Entrada de clientes - parcelas reajustadas
+                let entradaParcelasMes = 0;
+                if (mes <= parcelasEntrada) {
+                    // Para cada mês de venda, calcular as parcelas reajustadas
+                    for (let mesVenda = 1; mesVenda <= Math.min(mes, prazoObra); mesVenda++) {
+                        const unidadesVendidasNoMes = Math.min(vendasMes, unidades - (mesVenda - 1) * vendasMes);
+                        if (unidadesVendidasNoMes > 0) {
+                            const parcelasRestantes = parcelasEntrada - (mes - mesVenda);
+                            if (parcelasRestantes > 0) {
+                                const parcelaReajustada = calcularParcelaReajustada(valorParcelaInicialEntrada, mes - mesVenda + 1, prazoObra, inccMensal, ipcaMensal);
+                                entradaParcelasMes += unidadesVendidasNoMes * parcelaReajustada;
+                            }
+                        }
+                    }
+                }
                 
-                // Percentual de medição
-                const percentualMedicao = calcularMedicaoAcumulada(mes);
+                // Percentual de medição (só durante a obra)
+                const percentualMedicao = mes <= prazoObra ? calcularMedicaoAcumulada(mes) : 100;
                 
                 // Recebimento da Caixa
-                const valorLiberadoCaixa = (valorFinanciadoTotal * percentualMedicao / 100) * (unidadesVencidas / unidades);
+                let valorLiberadoCaixa = 0;
+                if (unidadesVencidas > 0) {
+                    valorLiberadoCaixa = (valorFinanciadoTotal * percentualMedicao / 100) * (unidadesVencidas / unidades);
+                }
                 
                 // Total do mês
-                const totalMes = valorLiberadoCaixa + entradaMes;
+                const totalMes = valorLiberadoCaixa + entradaParcelasMes;
+                fluxoAcumulado += totalMes;
+                
+                // Verificar necessidade de capital de giro
+                if (fluxoAcumulado < capitalGiroMaximo) {
+                    capitalGiroMaximo = fluxoAcumulado;
+                    mesCapitalGiroMaximo = mes;
+                }
                 
                 fluxoMensal.push({
                     mes,
@@ -419,16 +565,52 @@
                     unidadesVencidas,
                     percentualMedicao: percentualMedicao.toFixed(1),
                     recebimentoCaixa: valorLiberadoCaixa,
-                    entradaMes,
-                    totalMes
+                    entradaParcelasMes,
+                    totalMes,
+                    fluxoAcumulado
                 });
+            }
+            
+            // Atualizar informações de capital de giro
+            document.getElementById('capitalGiroMax').textContent = formatCurrency(Math.abs(capitalGiroMaximo));
+            document.getElementById('mesCapitalGiro').textContent = `Mês ${mesCapitalGiroMaximo}`;
+            
+            const warningElement = document.getElementById('warningCapital');
+            if (capitalGiroMaximo < 0) {
+                warningElement.style.display = 'block';
+                warningElement.innerHTML = `<strong>⚠️ Atenção!</strong> Será necessário capital de giro de <strong>${formatCurrency(Math.abs(capitalGiroMaximo))}</strong> no mês ${mesCapitalGiroMaximo}.`;
+            } else {
+                warningElement.style.display = 'none';
             }
             
             // Preencher tabela
             const tbody = document.getElementById('fluxoTable');
             tbody.innerHTML = '';
             
+            let totalEntradaParcelas = 0;
+            let totalGeral = 0;
+            
+            // Calcular total de entrada com reajustes
+            for (let mes = 1; mes <= periodoTotal; mes++) {
+                for (let mesVenda = 1; mesVenda <= Math.min(mes, prazoObra); mesVenda++) {
+                    const unidadesVendidasNoMes = Math.min(vendasMes, unidades - (mesVenda - 1) * vendasMes);
+                    if (unidadesVendidasNoMes > 0 && mes <= parcelasEntrada) {
+                        const parcelasRestantes = parcelasEntrada - (mes - mesVenda);
+                        if (parcelasRestantes > 0) {
+                            const parcelaReajustada = calcularParcelaReajustada(valorParcelaInicialEntrada, mes - mesVenda + 1, prazoObra, inccMensal, ipcaMensal);
+                            totalEntradaParcelas += unidadesVendidasNoMes * parcelaReajustada;
+                        }
+                    }
+                }
+            }
+            
+            let totalRecebimentoCaixa = 0;
+            totalGeral = 0;
+            
             fluxoMensal.forEach(linha => {
+                totalRecebimentoCaixa += linha.recebimentoCaixa;
+                totalGeral += linha.totalMes;
+                
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${linha.mes}</td>
@@ -436,11 +618,27 @@
                     <td>${formatNumber(linha.unidadesVencidas)}</td>
                     <td>${linha.percentualMedicao}%</td>
                     <td class="currency">${formatCurrency(linha.recebimentoCaixa)}</td>
-                    <td class="currency">${formatCurrency(linha.entradaMes)}</td>
+                    <td class="currency">${formatCurrency(linha.entradaParcelasMes)}</td>
                     <td class="currency ${linha.totalMes > 0 ? 'positive' : 'negative'}">${formatCurrency(linha.totalMes)}</td>
+                    <td class="currency ${linha.fluxoAcumulado >= 0 ? 'positive' : 'negative'}">${formatCurrency(linha.fluxoAcumulado)}</td>
                 `;
                 tbody.appendChild(tr);
             });
+            
+            // Adicionar linha de totais
+            const totalTr = document.createElement('tr');
+            totalTr.className = 'total-row';
+            totalTr.innerHTML = `
+                <td><strong>TOTAL</strong></td>
+                <td><strong>${formatNumber(unidades)}</strong></td>
+                <td><strong>${formatNumber(unidades)}</strong></td>
+                <td><strong>100%</strong></td>
+                <td class="currency"><strong>${formatCurrency(totalRecebimentoCaixa)}</strong></td>
+                <td class="currency"><strong>${formatCurrency(totalEntradaParcelas)}</strong></td>
+                <td class="currency"><strong>${formatCurrency(totalGeral)}</strong></td>
+                <td class="currency"><strong>${formatCurrency(fluxoMensal[fluxoMensal.length - 1].fluxoAcumulado)}</strong></td>
+            `;
+            tbody.appendChild(totalTr);
         }
         
         // Simular automaticamente ao carregar
