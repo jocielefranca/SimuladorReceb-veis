@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Fluxo de Caixa - MCMV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        .inputs-section, .results-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .btn-simulate {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .btn-simulate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.3);
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .result-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #3498db;
+        }
+        
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .result-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #34495e;
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .currency {
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        .positive {
+            color: #27ae60;
+        }
+        
+        .negative {
+            color: #e74c3c;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Simulador de Fluxo de Caixa - MCMV</h1>
+            <p>Planejamento financeiro para obras financiadas pela Caixa</p>
+        </div>
+        
+        <div class="content">
+            <div class="inputs-section">
+                <h2 class="section-title">Dados da Obra</h2>
+                
+                <div class="input-group">
+                    <label>Número de Unidades:</label>
+                    <input type="number" id="unidades" value="320" min="1">
+                </div>
+                
+                <div class="input-group">
+                    <label>Valor de Avaliação (por unidade):</label>
+                    <input type="number" id="valorUnidade" value="225000" min="1">
+                </div>
+                
+                <div class="input-group">
+                    <label>Prazo da Obra (meses):</label>
+                    <input type="number" id="prazoObra" value="24" min="6" max="60">
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Vendas/Mês:</label>
+                        <input type="number" id="vendasMes" value="25" min="1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Dias Venda→Vencimento:</label>
+                        <input type="number" id="diasVencimento" value="45" min="30" max="90">
+                    </div>
+                </div>
+                
+                <h2 class="section-title">Dados do Financiamento</h2>
+                
+                <div class="input-group">
+                    <label>Faixa MCMV:</label>
+                    <select id="faixaMCMV">
+                        <option value="1">Faixa 1 (até R$ 2.640)</option>
+                        <option value="1.5" selected>Faixa 1,5 (R$ 2.640 - R$ 4.400)</option>
+                        <option value="2">Faixa 2 (R$ 4.400 - R$ 7.000)</option>
+                        <option value="3">Faixa 3 (R$ 7.000 - R$ 10.000)</option>
+                    </select>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Entrada Cliente (R$):</label>
+                        <input type="number" id="entradaCliente" value="22000" min="0">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Sistema:</label>
+                        <select id="sistema">
+                            <option value="SAC" selected>SAC</option>
+                            <option value="PRICE">PRICE</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="btn-simulate" onclick="simular()">Simular Fluxo de Caixa</button>
+            </div>
+            
+            <div class="results-section">
+                <h2 class="section-title">Resultados da Simulação</h2>
+                
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-value" id="vgvTotal">R$ 0</div>
+                        <div class="result-label">VGV Total</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-value" id="valorFinanciado">R$ 0</div>
+                        <div class="result-label">Valor Financiado</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-value" id="subsidioTotal">R$ 0</div>
+                        <div class="result-label">Subsídio Total</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-value" id="capitalGiro">R$ 0</div>
+                        <div class="result-label">Capital de Giro</div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mês</th>
+                                <th>Vendas Acum.</th>
+                                <th>Unid. Vencidas</th>
+                                <th>% Medição</th>
+                                <th>Recebimento</th>
+                                <th>Entrada Clientes</th>
+                                <th>Total Mês</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fluxoTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const dadosFaixas = {
+            "1": { taxa: 4.25, subsidio: 47500, nome: "Faixa 1" },
+            "1.5": { taxa: 5.5, subsidio: 29000, nome: "Faixa 1,5" },
+            "2": { taxa: 7.5, subsidio: 25000, nome: "Faixa 2" },
+            "3": { taxa: 8.5, subsidio: 0, nome: "Faixa 3" }
+        };
+        
+        const cronogramaMedicoes = [
+            { inicio: 1, fim: 6, percentual: 15 }, // Fundações
+            { inicio: 7, fim: 12, percentual: 35 }, // Estrutura
+            { inicio: 13, fim: 18, percentual: 25 }, // Instalações
+            { inicio: 19, fim: 23, percentual: 20 }, // Acabamentos
+            { inicio: 24, fim: 24, percentual: 5 }   // Entrega
+        ];
+        
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        }
+        
+        function formatNumber(value) {
+            return new Intl.NumberFormat('pt-BR').format(value);
+        }
+        
+        function calcularMedicaoAcumulada(mes) {
+            let acumulado = 0;
+            for (const medicao of cronogramaMedicoes) {
+                if (mes >= medicao.fim) {
+                    acumulado += medicao.percentual;
+                } else if (mes >= medicao.inicio) {
+                    const mesesFase = medicao.fim - medicao.inicio + 1;
+                    const mesesDecorridos = mes - medicao.inicio + 1;
+                    acumulado += (medicao.percentual * mesesDecorridos) / mesesFase;
+                    break;
+                }
+            }
+            return Math.min(acumulado, 100);
+        }
+        
+        function simular() {
+            const unidades = parseInt(document.getElementById('unidades').value);
+            const valorUnidade = parseFloat(document.getElementById('valorUnidade').value);
+            const prazoObra = parseInt(document.getElementById('prazoObra').value);
+            const vendasMes = parseInt(document.getElementById('vendasMes').value);
+            const diasVencimento = parseInt(document.getElementById('diasVencimento').value);
+            const faixaMCMV = document.getElementById('faixaMCMV').value;
+            const entradaCliente = parseFloat(document.getElementById('entradaCliente').value);
+            
+            const faixa = dadosFaixas[faixaMCMV];
+            const vgvTotal = unidades * valorUnidade;
+            const subsidioTotal = unidades * faixa.subsidio;
+            const valorFinanciadoTotal = unidades * (valorUnidade - entradaCliente - faixa.subsidio);
+            const entradaTotalClientes = unidades * entradaCliente;
+            
+            // Atualizar cards de resultado
+            document.getElementById('vgvTotal').textContent = formatCurrency(vgvTotal);
+            document.getElementById('valorFinanciado').textContent = formatCurrency(valorFinanciadoTotal);
+            document.getElementById('subsidioTotal').textContent = formatCurrency(subsidioTotal);
+            document.getElementById('capitalGiro').textContent = formatCurrency(vgvTotal * 0.45);
+            
+            // Calcular fluxo mês a mês
+            const fluxoMensal = [];
+            let vendasAcumuladas = 0;
+            let unidadesVencidas = 0;
+            let entradaRecebidaAcumulada = 0;
+            const mesesVencimento = Math.ceil(diasVencimento / 30);
+            
+            for (let mes = 1; mes <= prazoObra; mes++) {
+                // Vendas do mês
+                const vendasMes_atual = Math.min(vendasMes, unidades - vendasAcumuladas);
+                vendasAcumuladas += vendasMes_atual;
+                
+                // Unidades vencidas (com delay)
+                if (mes > mesesVencimento) {
+                    const mesVenda = mes - mesesVencimento;
+                    if (mesVenda >= 1) {
+                        const vendasMesAnterior = Math.min(vendasMes, unidades - ((mesVenda - 1) * vendasMes));
+                        unidadesVencidas = Math.min(unidadesVencidas + vendasMesAnterior, unidades);
+                    }
+                }
+                
+                // Entrada de clientes do mês
+                const entradaMes = vendasMes_atual * entradaCliente;
+                entradaRecebidaAcumulada += entradaMes;
+                
+                // Percentual de medição
+                const percentualMedicao = calcularMedicaoAcumulada(mes);
+                
+                // Recebimento da Caixa
+                const valorLiberadoCaixa = (valorFinanciadoTotal * percentualMedicao / 100) * (unidadesVencidas / unidades);
+                
+                // Total do mês
+                const totalMes = valorLiberadoCaixa + entradaMes;
+                
+                fluxoMensal.push({
+                    mes,
+                    vendasAcumuladas,
+                    unidadesVencidas,
+                    percentualMedicao: percentualMedicao.toFixed(1),
+                    recebimentoCaixa: valorLiberadoCaixa,
+                    entradaMes,
+                    totalMes
+                });
+            }
+            
+            // Preencher tabela
+            const tbody = document.getElementById('fluxoTable');
+            tbody.innerHTML = '';
+            
+            fluxoMensal.forEach(linha => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${linha.mes}</td>
+                    <td>${formatNumber(linha.vendasAcumuladas)}</td>
+                    <td>${formatNumber(linha.unidadesVencidas)}</td>
+                    <td>${linha.percentualMedicao}%</td>
+                    <td class="currency">${formatCurrency(linha.recebimentoCaixa)}</td>
+                    <td class="currency">${formatCurrency(linha.entradaMes)}</td>
+                    <td class="currency ${linha.totalMes > 0 ? 'positive' : 'negative'}">${formatCurrency(linha.totalMes)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // Simular automaticamente ao carregar
+        window.onload = () => simular();
+    </script>
+</body>
+</html>
