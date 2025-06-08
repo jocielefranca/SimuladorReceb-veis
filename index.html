@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador de Fluxo de Caixa - MCMV com Subsídio</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -319,31 +320,6 @@
             color: #2e7d32;
         }
         
-        .faq-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 15px;
-        }
-        
-        .faq-item {
-            margin-bottom: 15px;
-        }
-        
-        .faq-question {
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .faq-question::before {
-            content: "•";
-            margin-right: 10px;
-            color: #e74c3c;
-        }
-        
         .footer {
             text-align: center;
             padding: 20px;
@@ -380,6 +356,32 @@
             border-radius: 10px;
             padding: 15px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .chart-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chart-btn {
+            padding: 5px 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        
+        .chart-btn.active {
+            background: #2c3e50;
         }
     </style>
 </head>
@@ -481,7 +483,7 @@
                 </div>
                 
                 <button class="btn-simulate" onclick="simular()">
-                    <i class="fas fa-calculator"></i> Simular Fluxo de Caixa
+                    Simular Fluxo de Caixa
                 </button>
             </div>
             
@@ -549,6 +551,13 @@
                 </div>
                 
                 <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Fluxo de Caixa</h3>
+                        <div class="chart-controls">
+                            <button class="chart-btn active" onclick="changeChartType('acumulado')">Acumulado</button>
+                            <button class="chart-btn" onclick="changeChartType('mensal')">Mensal</button>
+                        </div>
+                    </div>
                     <canvas id="cashFlowChart"></canvas>
                 </div>
                 
@@ -658,30 +667,11 @@
                         </tbody>
                     </table>
                 </div>
-                
-                <div class="faq-section">
-                    <h3>Perguntas Frequentes sobre o Subsídio MCMV</h3>
-                    
-                    <div class="faq-item">
-                        <div class="faq-question">Como o subsídio é tratado no fluxo de caixa?</div>
-                        <div class="faq-answer">O subsídio é somado ao valor financiado pela Caixa, aumentando o valor que a construtora recebe durante a obra.</div>
-                    </div>
-                    
-                    <div class="faq-item">
-                        <div class="faq-question">Quem paga o subsídio?</div>
-                        <div class="faq-answer">O subsídio é pago pelo governo federal através da Caixa Econômica Federal, sem custo para o comprador ou construtora.</div>
-                    </div>
-                    
-                    <div class="faq-item">
-                        <div class="faq-question">O valor do subsídio é fixo?</div>
-                        <div class="faq-answer">Sim, cada faixa do MCMV tem um valor fixo de subsídio por unidade habitacional.</div>
-                    </div>
-                </div>
             </div>
         </div>
         
         <div class="footer">
-            <p>Simulador MCMV com Tratamento Correto de Subsídios • Desenvolvido para Construtoras • Versão 2.0</p>
+            <p>Simulador MCMV com Tratamento Correto de Subsídios • Desenvolvido para Construtoras • Versão 2.1</p>
             <p>© 2023 Todos os direitos reservados</p>
         </div>
     </div>
@@ -703,6 +693,10 @@
             { inicio: 19, fim: 23, percentual: 20 }, // Acabamentos
             { inicio: 24, fim: 24, percentual: 5 }   // Entrega
         ];
+        
+        // Variáveis globais para gráfico
+        let cashFlowChart = null;
+        let chartType = 'acumulado';
         
         // Funções de formatação
         function formatCurrency(value) {
@@ -865,7 +859,7 @@
             // Preencher tabela de fluxo
             preencherTabelaFluxo(fluxoMensal);
             
-            // Gerar gráfico
+            // Gerar gráfico de fluxo de caixa
             gerarGraficoFluxo(fluxoMensal);
         }
         
@@ -911,7 +905,7 @@
                 const row = document.createElement('tr');
                 
                 // Destacar meses críticos
-                if (item.mes === 8) {
+                if (item.fluxoAcumulado < 0) {
                     row.style.backgroundColor = '#fff5f5';
                 }
                 
@@ -923,7 +917,7 @@
                     <td class="currency ${item.recebimentoCaixaMes > 0 ? 'positive' : ''}">${formatCurrency(item.recebimentoCaixaMes)}</td>
                     <td class="currency">${formatCurrency(item.entradaParcelasMes)}</td>
                     <td class="currency ${item.totalMes > 500000 ? 'positive' : ''}">${formatCurrency(item.totalMes)}</td>
-                    <td class="currency">${formatCurrency(item.fluxoAcumulado)}</td>
+                    <td class="currency ${item.fluxoAcumulado < 0 ? 'negative' : ''}">${formatCurrency(item.fluxoAcumulado)}</td>
                 `;
                 
                 tbody.appendChild(row);
@@ -943,110 +937,116 @@
             tbody.appendChild(totalRow);
         }
         
-        // Gerar gráfico de fluxo de caixa
+        // Gerar gráfico de fluxo de caixa usando Chart.js
         function gerarGraficoFluxo(fluxoMensal) {
-            const canvas = document.getElementById('cashFlowChart');
-            const ctx = canvas.getContext('2d');
+            const ctx = document.getElementById('cashFlowChart').getContext('2d');
             
-            // Dados para o gráfico
+            // Destruir gráfico existente se houver
+            if (cashFlowChart) {
+                cashFlowChart.destroy();
+            }
+            
+            // Preparar dados para o gráfico
             const meses = fluxoMensal.map(item => `Mês ${item.mes}`);
             const acumulado = fluxoMensal.map(item => item.fluxoAcumulado);
+            const mensal = fluxoMensal.map(item => item.totalMes);
             const recebCaixa = fluxoMensal.map(item => item.recebimentoCaixaMes);
             const entradaClientes = fluxoMensal.map(item => item.entradaParcelasMes);
             
-            // Limpar canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
             // Configurações do gráfico
-            const maxValor = Math.max(...acumulado);
-            const minValor = Math.min(...acumulado);
-            const altura = canvas.height - 50;
-            const largura = canvas.width - 80;
+            const datasets = [];
             
-            // Desenhar eixos
-            ctx.beginPath();
-            ctx.moveTo(50, 20);
-            ctx.lineTo(50, altura);
-            ctx.lineTo(largura + 50, altura);
-            ctx.strokeStyle = '#34495e';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            
-            // Desenhar linha de acumulado
-            ctx.beginPath();
-            ctx.moveTo(50, altura);
-            
-            for (let i = 0; i < acumulado.length; i++) {
-                const x = 50 + (i * largura) / (acumulado.length - 1);
-                const y = altura - ((acumulado[i] - minValor) / (maxValor - minValor)) * (altura - 20);
+            if (chartType === 'acumulado') {
+                datasets.push({
+                    label: 'Fluxo Acumulado',
+                    data: acumulado,
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3
+                });
+            } else {
+                datasets.push({
+                    label: 'Recebimento Caixa',
+                    data: recebCaixa,
+                    backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                    borderColor: 'rgba(46, 204, 113, 1)',
+                    borderWidth: 1
+                });
                 
-                if (i === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                }
-                
-                // Pontos no gráfico
-                ctx.beginPath();
-                ctx.arc(x, y, 4, 0, Math.PI * 2);
-                ctx.fillStyle = '#3498db';
-                ctx.fill();
+                datasets.push({
+                    label: 'Entrada Clientes',
+                    data: entradaClientes,
+                    backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    borderWidth: 1
+                });
             }
             
-            ctx.strokeStyle = '#3498db';
-            ctx.lineWidth = 3;
-            ctx.stroke();
-            
-            // Desenhar barras para recebimentos
-            const barWidth = largura / (acumulado.length * 2);
-            
-            for (let i = 0; i < recebCaixa.length; i++) {
-                const x = 50 + (i * largura) / (recebCaixa.length - 1) - barWidth;
-                const heightCaixa = (recebCaixa[i] / maxValor) * (altura - 20);
-                const heightEntrada = (entradaClientes[i] / maxValor) * (altura - 20);
-                
-                // Barra de recebimento da Caixa
-                if (recebCaixa[i] > 0) {
-                    ctx.fillStyle = 'rgba(46, 204, 113, 0.7)';
-                    ctx.fillRect(x, altura - heightCaixa, barWidth, heightCaixa);
+            // Criar o gráfico
+            cashFlowChart = new Chart(ctx, {
+                type: chartType === 'acumulado' ? 'line' : 'bar',
+                data: {
+                    labels: meses,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: chartType === 'acumulado' ? 'Fluxo de Caixa Acumulado' : 'Recebimentos Mensais',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += formatCurrency(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        }
+                    }
                 }
-                
-                // Barra de entrada de clientes
-                if (entradaClientes[i] > 0) {
-                    ctx.fillStyle = 'rgba(52, 152, 219, 0.7)';
-                    ctx.fillRect(x + barWidth, altura - heightEntrada, barWidth, heightEntrada);
-                }
+            });
+        }
+        
+        // Mudar tipo de gráfico
+        function changeChartType(type) {
+            chartType = type;
+            
+            // Atualizar botões
+            document.querySelectorAll('.chart-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase() === type);
+            });
+            
+            // Regerar gráfico
+            if (cashFlowChart) {
+                gerarGraficoFluxo(cashFlowChart.data.datasets[0].data.map((_, i) => i));
             }
-            
-            // Adicionar legendas
-            ctx.fillStyle = '#34495e';
-            ctx.font = '12px Arial';
-            ctx.textAlign = 'center';
-            
-            for (let i = 0; i < meses.length; i += 3) {
-                const x = 50 + (i * largura) / (meses.length - 1);
-                ctx.fillText(meses[i], x, altura + 20);
-            }
-            
-            // Título do gráfico
-            ctx.font = 'bold 14px Arial';
-            ctx.fillStyle = '#2c3e50';
-            ctx.textAlign = 'center';
-            ctx.fillText('Fluxo de Caixa Acumulado e Recebimentos Mensais', largura / 2 + 50, 15);
-            
-            // Legenda
-            ctx.font = '12px Arial';
-            ctx.textAlign = 'left';
-            ctx.fillStyle = '#3498db';
-            ctx.fillText('--- Fluxo Acumulado', largura - 150, 35);
-            ctx.fillStyle = 'rgba(46, 204, 113, 0.7)';
-            ctx.fillRect(largura - 180, 28, 15, 15);
-            ctx.fillStyle = '#34495e';
-            ctx.fillText('Receb. Caixa', largura - 160, 35);
-            ctx.fillStyle = 'rgba(52, 152, 219, 0.7)';
-            ctx.fillRect(largura - 180, 48, 15, 15);
-            ctx.fillStyle = '#34495e';
-            ctx.fillText('Entrada Clientes', largura - 160, 55);
         }
         
         // Inicializar a simulação ao carregar
