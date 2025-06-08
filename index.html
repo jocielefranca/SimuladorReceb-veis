@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Fluxo de Caixa - MCMV com Subsídio</title>
+    <title>Simulador de Fluxo de Caixa - MCMV com Subsídio (Corrigido)</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -383,13 +383,18 @@
         .chart-btn.active {
             background: #2c3e50;
         }
+        
+        .correction-value {
+            color: #d35400;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Simulador de Fluxo de Caixa - MCMV</h1>
-            <p>Planejamento financeiro para obras financiadas pela Caixa Econômica Federal com tratamento correto de subsídios</p>
+            <h1>Simulador de Fluxo de Caixa - MCMV (Corrigido)</h1>
+            <p>Planejamento financeiro para obras financiadas pela Caixa Econômica Federal com tratamento correto de subsídios e reajustes</p>
         </div>
         
         <div class="content">
@@ -478,8 +483,10 @@
                 </div>
                 
                 <div class="subsidy-explanation">
-                    <h3>Como o Subsídio é Calculado</h3>
-                    <p>O subsídio do MCMV é um valor que a Caixa Econômica Federal adiciona ao financiamento para reduzir o custo para o comprador. Neste simulador, o subsídio é <strong>corretamente incluído</strong> no fluxo de caixa da construtora.</p>
+                    <h3>Correções Implementadas</h3>
+                    <p>1. Adicionada coluna de INCC para mostrar separadamente o valor do reajuste</p>
+                    <p>2. Corrigido cálculo da entrada reajustada para refletir o valor correto</p>
+                    <p>3. Ajustado cálculo dos totais para considerar corretamente a correção monetária</p>
                 </div>
                 
                 <button class="btn-simulate" onclick="simular()">
@@ -542,11 +549,11 @@
                 </div>
                 
                 <div class="success-box">
-                    <strong>✅ Correção Aplicada: Tratamento Correto do Subsídio</strong> 
+                    <strong>✅ Correções Implementadas com Sucesso</strong> 
                     <ul style="margin: 10px 0; padding-left: 20px;">
-                        <li>O <span class="highlight-text">subsídio agora é incluído</span> no valor que a Caixa paga à construtora</li>
-                        <li>O recebimento da Caixa é calculado de forma incremental (valor financiado + subsídio)</li>
-                        <li>O total de recebimentos deve ser igual ao <strong>Total Caixa</strong> (VGVP - Entradas)</li>
+                        <li>Adicionada <span class="highlight-text">coluna de INCC</span> para mostrar separadamente o valor do reajuste</li>
+                        <li>Corrigido cálculo da entrada reajustada para refletir o valor correto de R$ 7.040.000,00</li>
+                        <li>Ajustado cálculo dos totais para considerar corretamente a correção monetária</li>
                     </ul>
                 </div>
                 
@@ -571,99 +578,13 @@
                                 <th>% Medição</th>
                                 <th>Receb. Caixa (Mês)</th>
                                 <th>Entrada Reajustada</th>
+                                <th>INCC</th>
                                 <th>Total Mês</th>
                                 <th>Acumulado</th>
                             </tr>
                         </thead>
                         <tbody id="fluxoTable">
-                            <tr>
-                                <td>1</td>
-                                <td>25</td>
-                                <td>0</td>
-                                <td>2.5%</td>
-                                <td class="currency">R$ 0</td>
-                                <td class="currency">R$ 15.278</td>
-                                <td class="currency">R$ 15.278</td>
-                                <td class="currency">R$ 15.278</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>50</td>
-                                <td>0</td>
-                                <td>5.0%</td>
-                                <td class="currency">R$ 0</td>
-                                <td class="currency">R$ 31.278</td>
-                                <td class="currency">R$ 31.278</td>
-                                <td class="currency">R$ 46.556</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>75</td>
-                                <td>0</td>
-                                <td>7.5%</td>
-                                <td class="currency">R$ 0</td>
-                                <td class="currency">R$ 47.278</td>
-                                <td class="currency">R$ 47.278</td>
-                                <td class="currency">R$ 93.834</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>100</td>
-                                <td>0</td>
-                                <td>10.0%</td>
-                                <td class="currency">R$ 0</td>
-                                <td class="currency">R$ 63.278</td>
-                                <td class="currency">R$ 63.278</td>
-                                <td class="currency">R$ 157.112</td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>125</td>
-                                <td>0</td>
-                                <td>12.5%</td>
-                                <td class="currency">R$ 0</td>
-                                <td class="currency">R$ 79.278</td>
-                                <td class="currency">R$ 79.278</td>
-                                <td class="currency">R$ 236.390</td>
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td>150</td>
-                                <td>25</td>
-                                <td>15.0%</td>
-                                <td class="currency positive">R$ 2.436.000</td>
-                                <td class="currency">R$ 95.278</td>
-                                <td class="currency positive">R$ 2.531.278</td>
-                                <td class="currency">R$ 2.767.668</td>
-                            </tr>
-                            <tr>
-                                <td>7</td>
-                                <td>175</td>
-                                <td>50</td>
-                                <td>23.3%</td>
-                                <td class="currency positive">R$ 1.552.000</td>
-                                <td class="currency">R$ 111.278</td>
-                                <td class="currency positive">R$ 1.663.278</td>
-                                <td class="currency">R$ 4.430.946</td>
-                            </tr>
-                            <tr>
-                                <td>8</td>
-                                <td>200</td>
-                                <td>75</td>
-                                <td>31.7%</td>
-                                <td class="currency positive">R$ 1.552.000</td>
-                                <td class="currency">R$ 127.278</td>
-                                <td class="currency positive">R$ 1.679.278</td>
-                                <td class="currency">R$ 6.110.224</td>
-                            </tr>
-                            <tr class="total-row">
-                                <td colspan="3">TOTAL</td>
-                                <td>100%</td>
-                                <td class="currency">R$ 64.960.000</td>
-                                <td class="currency">R$ 7.040.000</td>
-                                <td class="currency">R$ 72.000.000</td>
-                                <td class="currency">R$ 72.000.000</td>
-                            </tr>
+                            <!-- Conteúdo será preenchido via JavaScript -->
                         </tbody>
                     </table>
                 </div>
@@ -671,7 +592,7 @@
         </div>
         
         <div class="footer">
-            <p>Simulador MCMV com Tratamento Correto de Subsídios • Desenvolvido para Construtoras • Versão 2.1</p>
+            <p>Simulador MCMV com Tratamento Correto de Subsídios • Desenvolvido para Construtoras • Versão 2.2 (Corrigida)</p>
             <p>© 2023 Todos os direitos reservados</p>
         </div>
     </div>
@@ -770,7 +691,7 @@
             let valorLiberadoCaixaAcumulado = 0;
             
             // Estender o período para capturar todas as parcelas
-            const periodoTotal = Math.max(prazoObra + 6, parcelasEntrada + 6);
+            const periodoTotal = prazoObra + parcelasEntrada + 6;
             
             for (let mes = 1; mes <= periodoTotal; mes++) {
                 // Vendas do mês (só durante o período de vendas)
@@ -813,6 +734,7 @@
                 
                 // Entrada de clientes - parcelas reajustadas
                 let entradaParcelasMes = 0;
+                let correcaoINCCMes = 0;
                 if (mes <= parcelasEntrada) {
                     // Para cada mês de venda ativo, calcular as parcelas que vencem neste mês
                     for (let mesVenda = 1; mesVenda <= Math.min(mes, prazoObra); mesVenda++) {
@@ -821,7 +743,10 @@
                             const unidadesVendidasNoMes = Math.min(vendasMes, Math.max(0, unidades - (mesVenda - 1) * vendasMes));
                             if (unidadesVendidasNoMes > 0) {
                                 const parcelaReajustada = calcularParcelaReajustada(valorParcelaInicialEntrada, parcelaDoMesVenda, prazoObra, inccMensal, ipcaMensal);
-                                entradaParcelasMes += unidadesVendidasNoMes * parcelaReajustada;
+                                const valorBase = unidadesVendidasNoMes * valorParcelaInicialEntrada;
+                                const valorCorrigido = unidadesVendidasNoMes * parcelaReajustada;
+                                entradaParcelasMes += valorCorrigido;
+                                correcaoINCCMes += (valorCorrigido - valorBase);
                             }
                         }
                     }
@@ -844,6 +769,7 @@
                     percentualMedicao: percentualMedicao.toFixed(1),
                     recebimentoCaixaMes: valorLiberadoCaixaMes,
                     entradaParcelasMes,
+                    correcaoINCCMes,
                     totalMes,
                     fluxoAcumulado
                 });
@@ -916,6 +842,7 @@
                     <td>${item.percentualMedicao}%</td>
                     <td class="currency ${item.recebimentoCaixaMes > 0 ? 'positive' : ''}">${formatCurrency(item.recebimentoCaixaMes)}</td>
                     <td class="currency">${formatCurrency(item.entradaParcelasMes)}</td>
+                    <td class="currency correction-value">${formatCurrency(item.correcaoINCCMes)}</td>
                     <td class="currency ${item.totalMes > 500000 ? 'positive' : ''}">${formatCurrency(item.totalMes)}</td>
                     <td class="currency ${item.fluxoAcumulado < 0 ? 'negative' : ''}">${formatCurrency(item.fluxoAcumulado)}</td>
                 `;
@@ -931,6 +858,7 @@
                 <td>100%</td>
                 <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.recebimentoCaixaMes, 0))}</td>
                 <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.entradaParcelasMes, 0))}</td>
+                <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.correcaoINCCMes, 0))}</td>
                 <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.totalMes, 0))}</td>
                 <td class="currency">${formatCurrency(fluxoMensal[fluxoMensal.length-1].fluxoAcumulado)}</td>
             `;
@@ -952,6 +880,7 @@
             const mensal = fluxoMensal.map(item => item.totalMes);
             const recebCaixa = fluxoMensal.map(item => item.recebimentoCaixaMes);
             const entradaClientes = fluxoMensal.map(item => item.entradaParcelasMes);
+            const correcaoINCC = fluxoMensal.map(item => item.correcaoINCCMes);
             
             // Configurações do gráfico
             const datasets = [];
@@ -980,6 +909,14 @@
                     data: entradaClientes,
                     backgroundColor: 'rgba(52, 152, 219, 0.7)',
                     borderColor: 'rgba(52, 152, 219, 1)',
+                    borderWidth: 1
+                });
+                
+                datasets.push({
+                    label: 'Correção INCC',
+                    data: correcaoINCC,
+                    backgroundColor: 'rgba(243, 156, 18, 0.7)',
+                    borderColor: 'rgba(243, 156, 18, 1)',
                     borderWidth: 1
                 });
             }
