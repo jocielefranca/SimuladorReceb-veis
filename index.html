@@ -217,6 +217,15 @@
             color: #dc3545;
         }
         
+        .info-box {
+            background: #e3f2fd;
+            border: 1px solid #90caf9;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #1565c0;
+        }
+        
         @media (max-width: 1200px) {
             .content {
                 grid-template-columns: 1fr;
@@ -246,7 +255,7 @@
     <div class="container">
         <div class="header">
             <h1>Simulador de Fluxo de Caixa - MCMV</h1>
-            <p>Planejamento financeiro para obras financiadas pela Caixa</p>
+            <p>Planejamento financeiro para obras financiadas pela Caixa (Versão Corrigida)</p>
         </div>
         
         <div class="content">
@@ -348,7 +357,12 @@
                     
                     <div class="result-card">
                         <div class="result-value" id="valorFinanciado">R$ 0</div>
-                        <div class="result-label">Valor Financiado</div>
+                        <div class="result-label">Valor Financiado Caixa</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-value" id="entradaTotal">R$ 0</div>
+                        <div class="result-label">Entrada Total Clientes</div>
                     </div>
                     
                     <div class="result-card">
@@ -381,6 +395,10 @@
                     <strong>⚠️ Atenção!</strong> Será necessário capital de giro para cobrir o fluxo negativo.
                 </div>
                 
+                <div id="infoBox" class="info-box">
+                    <strong>✅ Correção Aplicada:</strong> O recebimento da Caixa agora é calculado de forma incremental, evitando duplicações. O total de recebimentos deve ser igual ao Valor Financiado pela Caixa.
+                </div>
+                
                 <div class="table-container">
                     <table>
                         <thead>
@@ -389,7 +407,7 @@
                                 <th>Vendas Acum.</th>
                                 <th>Unid. Vencidas</th>
                                 <th>% Medição</th>
-                                <th>Receb. Caixa</th>
+                                <th>Receb. Caixa (Mês)</th>
                                 <th>Entrada Reajustada</th>
                                 <th>Total Mês</th>
                                 <th>Acumulado</th>
@@ -480,8 +498,8 @@
             const faixa = dadosFaixas[faixaMCMV];
             const vgvTotal = unidades * valorUnidade;
             const subsidioTotal = unidades * faixa.subsidio;
-            const valorFinanciadoTotal = unidades * (valorUnidade - entradaCliente - faixa.subsidio);
             const entradaTotalClientes = unidades * entradaCliente;
+            const valorFinanciadoTotal = vgvTotal - entradaTotalClientes - subsidioTotal;
             const valorParcelaInicialEntrada = entradaCliente / parcelasEntrada;
             
             // Calcular parcela final (com todos os reajustes)
@@ -490,6 +508,7 @@
             // Atualizar cards de resultado
             document.getElementById('vgvTotal').textContent = formatCurrency(vgvTotal);
             document.getElementById('valorFinanciado').textContent = formatCurrency(valorFinanciadoTotal);
+            document.getElementById('entradaTotal').textContent = formatCurrency(entradaTotalClientes);
             document.getElementById('subsidioTotal').textContent = formatCurrency(subsidioTotal);
             document.getElementById('parcelaEntrada').textContent = formatCurrency(valorParcelaInicialEntrada);
             document.getElementById('parcelaFinal').textContent = formatCurrency(parcelaFinalEntrada);
@@ -497,14 +516,17 @@
             // Calcular fluxo mês a mês
             const fluxoMensal = [];
             let vendasAcumuladas = 0;
-            let unidadesVencidas = 0;
+            let unidadesVencidasAcumuladas = 0;
             let fluxoAcumulado = 0;
             let capitalGiroMaximo = 0;
             let mesCapitalGiroMaximo = 0;
             const mesesVencimento = Math.ceil(diasVencimento / 30);
             
+            // Controle para liberação incremental da Caixa
+            let valorLiberadoCaixaAcumulado = 0;
+            
             // Estender o período para capturar todas as parcelas
-            const periodoTotal = Math.max(prazoObra, parcelasEntrada);
+            const periodoTotal = Math.max(prazoObra + 6, parcelasEntrada + 6);
             
             for (let mes = 1; mes <= periodoTotal; mes++) {
                 // Vendas do mês (só durante o período de vendas)
@@ -514,28 +536,19 @@
                     vendasAcumuladas += vendasMes_atual;
                 }
                 
-                // Unidades vencidas (com delay)
+                // Unidades vencidas (com delay) - incremento do mês
+                let novasUnidadesVencidas = 0;
                 if (mes > mesesVencimento) {
                     const mesVenda = mes - mesesVencimento;
                     if (mesVenda >= 1 && mesVenda <= prazoObra) {
-                        const vendasMesPassado = Math.min(vendasMes, unidades - Math.max(0, (mesVenda - 1) * vendasMes));
-                        const novasVencidas = Math.min(vendasMesPassado, unidades - unidadesVencidas);
-                        unidadesVencidas += novasVencidas;
-                    }
-                }
-                
-                // Entrada de clientes - parcelas reajustadas
-                let entradaParcelasMes = 0;
-                if (mes <= parcelasEntrada) {
-                    // Para cada mês de venda, calcular as parcelas reajustadas
-                    for (let mesVenda = 1; mesVenda <= Math.min(mes, prazoObra); mesVenda++) {
-                        const unidadesVendidasNoMes = Math.min(vendasMes, unidades - (mesVenda - 1) * vendasMes);
-                        if (unidadesVendidasNoMes > 0) {
-                            const parcelasRestantes = parcelasEntrada - (mes - mesVenda);
-                            if (parcelasRestantes > 0) {
-                                const parcelaReajustada = calcularParcelaReajustada(valorParcelaInicialEntrada, mes - mesVenda + 1, prazoObra, inccMensal, ipcaMensal);
-                                entradaParcelasMes += unidadesVendidasNoMes * parcelaReajustada;
-                            }
+                        // Calcular quantas unidades foram vendidas no mês que agora vence
+                        const vendasAcumuladasAteAnterior = Math.max(0, (mesVenda - 1) * vendasMes);
+                        const vendasAcumuladasAteMesVenda = Math.min(unidades, mesVenda * vendasMes);
+                        const vendasDoMesQueVence = vendasAcumuladasAteMesVenda - vendasAcumuladasAteAnterior;
+                        
+                        if (vendasDoMesQueVence > 0 && unidadesVencidasAcumuladas < unidades) {
+                            novasUnidadesVencidas = Math.min(vendasDoMesQueVence, unidades - unidadesVencidasAcumuladas);
+                            unidadesVencidasAcumuladas += novasUnidadesVencidas;
                         }
                     }
                 }
@@ -543,14 +556,35 @@
                 // Percentual de medição (só durante a obra)
                 const percentualMedicao = mes <= prazoObra ? calcularMedicaoAcumulada(mes) : 100;
                 
-                // Recebimento da Caixa
-                let valorLiberadoCaixa = 0;
-                if (unidadesVencidas > 0) {
-                    valorLiberadoCaixa = (valorFinanciadoTotal * percentualMedicao / 100) * (unidadesVencidas / unidades);
+                // CORREÇÃO: Recebimento incremental da Caixa
+                let valorLiberadoCaixaMes = 0;
+                if (unidadesVencidasAcumuladas > 0) {
+                    // Valor que deveria estar liberado até este mês
+                    const valorQueDeveriaTerLiberado = (valorFinanciadoTotal * percentualMedicao / 100) * (unidadesVencidasAcumuladas / unidades);
+                    
+                    // Valor incremental do mês = diferença do que deveria ter liberado menos o que já foi liberado
+                    valorLiberadoCaixaMes = Math.max(0, valorQueDeveriaTerLiberado - valorLiberadoCaixaAcumulado);
+                    valorLiberadoCaixaAcumulado += valorLiberadoCaixaMes;
+                }
+                
+                // Entrada de clientes - parcelas reajustadas
+                let entradaParcelasMes = 0;
+                if (mes <= parcelasEntrada) {
+                    // Para cada mês de venda ativo, calcular as parcelas que vencem neste mês
+                    for (let mesVenda = 1; mesVenda <= Math.min(mes, prazoObra); mesVenda++) {
+                        const parcelaDoMesVenda = mes - mesVenda + 1; // Qual parcela deste mês de venda
+                        if (parcelaDoMesVenda <= parcelasEntrada) {
+                            const unidadesVendidasNoMes = Math.min(vendasMes, Math.max(0, unidades - (mesVenda - 1) * vendasMes));
+                            if (unidadesVendidasNoMes > 0) {
+                                const parcelaReajustada = calcularParcelaReajustada(valorParcelaInicialEntrada, parcelaDoMesVenda, prazoObra, inccMensal, ipcaMensal);
+                                entradaParcelasMes += unidadesVendidasNoMes * parcelaReajustada;
+                            }
+                        }
+                    }
                 }
                 
                 // Total do mês
-                const totalMes = valorLiberadoCaixa + entradaParcelasMes;
+                const totalMes = valorLiberadoCaixaMes + entradaParcelasMes;
                 fluxoAcumulado += totalMes;
                 
                 // Verificar necessidade de capital de giro
@@ -562,9 +596,9 @@
                 fluxoMensal.push({
                     mes,
                     vendasAcumuladas,
-                    unidadesVencidas,
+                    unidadesVencidasAcumuladas,
                     percentualMedicao: percentualMedicao.toFixed(1),
-                    recebimentoCaixa: valorLiberadoCaixa,
+                    recebimentoCaixaMes: valorLiberadoCaixaMes,
                     entradaParcelasMes,
                     totalMes,
                     fluxoAcumulado
@@ -587,37 +621,22 @@
             const tbody = document.getElementById('fluxoTable');
             tbody.innerHTML = '';
             
+            let totalRecebimentoCaixa = 0;
             let totalEntradaParcelas = 0;
             let totalGeral = 0;
             
-            // Calcular total de entrada com reajustes
-            for (let mes = 1; mes <= periodoTotal; mes++) {
-                for (let mesVenda = 1; mesVenda <= Math.min(mes, prazoObra); mesVenda++) {
-                    const unidadesVendidasNoMes = Math.min(vendasMes, unidades - (mesVenda - 1) * vendasMes);
-                    if (unidadesVendidasNoMes > 0 && mes <= parcelasEntrada) {
-                        const parcelasRestantes = parcelasEntrada - (mes - mesVenda);
-                        if (parcelasRestantes > 0) {
-                            const parcelaReajustada = calcularParcelaReajustada(valorParcelaInicialEntrada, mes - mesVenda + 1, prazoObra, inccMensal, ipcaMensal);
-                            totalEntradaParcelas += unidadesVendidasNoMes * parcelaReajustada;
-                        }
-                    }
-                }
-            }
-            
-            let totalRecebimentoCaixa = 0;
-            totalGeral = 0;
-            
             fluxoMensal.forEach(linha => {
-                totalRecebimentoCaixa += linha.recebimentoCaixa;
+                totalRecebimentoCaixa += linha.recebimentoCaixaMes;
+                totalEntradaParcelas += linha.entradaParcelasMes;
                 totalGeral += linha.totalMes;
                 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${linha.mes}</td>
                     <td>${formatNumber(linha.vendasAcumuladas)}</td>
-                    <td>${formatNumber(linha.unidadesVencidas)}</td>
+                    <td>${formatNumber(linha.unidadesVencidasAcumuladas)}</td>
                     <td>${linha.percentualMedicao}%</td>
-                    <td class="currency">${formatCurrency(linha.recebimentoCaixa)}</td>
+                    <td class="currency">${formatCurrency(linha.recebimentoCaixaMes)}</td>
                     <td class="currency">${formatCurrency(linha.entradaParcelasMes)}</td>
                     <td class="currency ${linha.totalMes > 0 ? 'positive' : 'negative'}">${formatCurrency(linha.totalMes)}</td>
                     <td class="currency ${linha.fluxoAcumulado >= 0 ? 'positive' : 'negative'}">${formatCurrency(linha.fluxoAcumulado)}</td>
@@ -639,6 +658,12 @@
                 <td class="currency"><strong>${formatCurrency(fluxoMensal[fluxoMensal.length - 1].fluxoAcumulado)}</strong></td>
             `;
             tbody.appendChild(totalTr);
+            
+            // Verificar se os totais batem
+            const diferenca = Math.abs(totalRecebimentoCaixa - valorFinanciadoTotal);
+            if (diferenca > 1) { // Tolerância de R$ 1 para arredondamentos
+                console.warn(`Diferença entre total recebido da Caixa (${formatCurrency(totalRecebimentoCaixa)}) e valor financiado (${formatCurrency(valorFinanciadoTotal)}): ${formatCurrency(diferenca)}`);
+            }
         }
         
         // Simular automaticamente ao carregar
