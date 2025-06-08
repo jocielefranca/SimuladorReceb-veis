@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Fluxo de Caixa - MCMV</title>
+    <title>Simulador de Fluxo de Caixa - MCMV com Subsídio</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
             min-height: 100vh;
             padding: 20px;
+            color: #333;
         }
         
         .container {
@@ -23,34 +24,62 @@
             margin: 0 auto;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
         
         .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            background: linear-gradient(135deg, #0c2461, #1e3799, #4a69bd);
             color: white;
             padding: 30px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
         
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="0,100 100,0 100,100" opacity="0.1"/></svg>');
+            background-size: cover;
+            opacity: 0.3;
         }
         
         .content {
             display: grid;
             grid-template-columns: 1fr 3fr;
-            gap: 30px;
+            gap: 25px;
             padding: 30px;
+        }
+        
+        @media (max-width: 1200px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
         }
         
         .inputs-section, .results-section {
             background: #f8f9fa;
             padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
         }
         
         .section-title {
@@ -59,6 +88,17 @@
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 3px solid #3498db;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: #e74c3c;
         }
         
         .input-group {
@@ -79,12 +119,13 @@
             border-radius: 8px;
             font-size: 1rem;
             transition: all 0.3s ease;
+            background: white;
         }
         
         .input-group input:focus, .input-group select:focus {
             outline: none;
             border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
         
         .input-row {
@@ -93,10 +134,16 @@
             gap: 15px;
         }
         
+        @media (max-width: 768px) {
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
         .btn-simulate {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
             color: white;
             border: none;
             border-radius: 10px;
@@ -105,16 +152,39 @@
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+            position: relative;
+            overflow: hidden;
         }
         
         .btn-simulate:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.5);
+        }
+        
+        .btn-simulate:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-simulate::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 40px;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(25deg);
+            transition: all 0.5s;
+        }
+        
+        .btn-simulate:hover::after {
+            left: 120%;
         }
         
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
             margin-bottom: 30px;
         }
@@ -124,13 +194,24 @@
             padding: 20px;
             border-radius: 10px;
             text-align: center;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
             border-left: 4px solid #3498db;
+            transition: transform 0.3s ease;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-5px);
         }
         
         .result-card.negative {
             border-left-color: #e74c3c;
-            background: #fff5f5;
+            background: linear-gradient(to right, #ffffff, #ffeeee);
+        }
+        
+        .result-card.highlight {
+            border-left-color: #f39c12;
+            background: linear-gradient(to right, #ffffff, #fff8e6);
+            box-shadow: 0 5px 20px rgba(243, 156, 18, 0.2);
         }
         
         .result-value {
@@ -149,9 +230,10 @@
             background: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
             max-height: 600px;
             overflow-y: auto;
+            border: 1px solid #e1e8ed;
         }
         
         table {
@@ -161,9 +243,9 @@
         }
         
         th {
-            background: #34495e;
+            background: linear-gradient(to bottom, #2c3e50, #34495e);
             color: white;
-            padding: 12px 8px;
+            padding: 12px 10px;
             text-align: left;
             font-weight: 600;
             position: sticky;
@@ -177,8 +259,12 @@
             border-bottom: 1px solid #ecf0f1;
         }
         
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
         tr:hover {
-            background: #f8f9fa;
+            background-color: #e8f4fd;
         }
         
         .currency {
@@ -195,22 +281,20 @@
         }
         
         .total-row {
-            background: #2c3e50 !important;
+            background: linear-gradient(to right, #2c3e50, #34495e) !important;
             color: white !important;
             font-weight: bold;
         }
         
-        .total-row td {
-            border-bottom: 2px solid #34495e;
-        }
-        
         .warning {
             background: #fff3cd;
-            border: 1px solid #ffeaa7;
+            border-left: 4px solid #ffc107;
             border-radius: 8px;
             padding: 15px;
             margin: 15px 0;
             color: #856404;
+            display: flex;
+            align-items: center;
         }
         
         .warning strong {
@@ -219,35 +303,83 @@
         
         .info-box {
             background: #e3f2fd;
-            border: 1px solid #90caf9;
+            border-left: 4px solid #2196f3;
             border-radius: 8px;
             padding: 15px;
             margin: 15px 0;
             color: #1565c0;
         }
         
-        @media (max-width: 1200px) {
-            .content {
-                grid-template-columns: 1fr;
-            }
+        .success-box {
+            background: #e8f5e8;
+            border-left: 4px solid #4caf50;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #2e7d32;
         }
         
-        @media (max-width: 768px) {
-            .input-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .results-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            table {
-                font-size: 0.8rem;
-            }
-            
-            th, td {
-                padding: 8px 4px;
-            }
+        .faq-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        
+        .faq-item {
+            margin-bottom: 15px;
+        }
+        
+        .faq-question {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .faq-question::before {
+            content: "•";
+            margin-right: 10px;
+            color: #e74c3c;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        .highlight-text {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+        }
+        
+        .subsidy-explanation {
+            background: #f0f7ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px dashed #3498db;
+        }
+        
+        .subsidy-explanation h3 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
         }
     </style>
 </head>
@@ -255,7 +387,7 @@
     <div class="container">
         <div class="header">
             <h1>Simulador de Fluxo de Caixa - MCMV</h1>
-            <p>Planejamento financeiro para obras financiadas pela Caixa (Versão Corrigida)</p>
+            <p>Planejamento financeiro para obras financiadas pela Caixa Econômica Federal com tratamento correto de subsídios</p>
         </div>
         
         <div class="content">
@@ -336,14 +468,21 @@
                 </div>
                 
                 <div class="input-group">
-                    <label>Sistema:</label>
+                    <label>Sistema de Amortização:</label>
                     <select id="sistema">
                         <option value="SAC" selected>SAC</option>
                         <option value="PRICE">PRICE</option>
                     </select>
                 </div>
                 
-                <button class="btn-simulate" onclick="simular()">Simular Fluxo de Caixa</button>
+                <div class="subsidy-explanation">
+                    <h3>Como o Subsídio é Calculado</h3>
+                    <p>O subsídio do MCMV é um valor que a Caixa Econômica Federal adiciona ao financiamento para reduzir o custo para o comprador. Neste simulador, o subsídio é <strong>corretamente incluído</strong> no fluxo de caixa da construtora.</p>
+                </div>
+                
+                <button class="btn-simulate" onclick="simular()">
+                    <i class="fas fa-calculator"></i> Simular Fluxo de Caixa
+                </button>
             </div>
             
             <div class="results-section">
@@ -351,52 +490,66 @@
                 
                 <div class="results-grid">
                     <div class="result-card">
-                        <div class="result-value" id="vgvTotal">R$ 0</div>
+                        <div class="result-value" id="vgvTotal">R$ 72.000.000</div>
                         <div class="result-label">VGV Total</div>
                     </div>
                     
-                    <div class="result-card">
-                        <div class="result-value" id="valorFinanciado">R$ 0</div>
-                        <div class="result-label">Valor Financiado Caixa</div>
+                    <div class="result-card highlight">
+                        <div class="result-value" id="valorCaixaTotal">R$ 64.960.000</div>
+                        <div class="result-label">Total Caixa (Financ.+Subs.)</div>
                     </div>
                     
                     <div class="result-card">
-                        <div class="result-value" id="entradaTotal">R$ 0</div>
-                        <div class="result-label">Entrada Total Clientes</div>
+                        <div class="result-value" id="valorFinanciado">R$ 62.720.000</div>
+                        <div class="result-label">Valor Financiado</div>
                     </div>
                     
                     <div class="result-card">
-                        <div class="result-value" id="subsidioTotal">R$ 0</div>
+                        <div class="result-value" id="subsidioTotal">R$ 9.280.000</div>
                         <div class="result-label">Subsídio Total</div>
                     </div>
                     
                     <div class="result-card">
-                        <div class="result-value" id="parcelaEntrada">R$ 0</div>
+                        <div class="result-value" id="entradaTotal">R$ 7.040.000</div>
+                        <div class="result-label">Entrada Total Clientes</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-value" id="parcelaEntrada">R$ 611,11</div>
                         <div class="result-label">Parcela Inicial</div>
                     </div>
                     
                     <div class="result-card">
-                        <div class="result-value" id="parcelaFinal">R$ 0</div>
+                        <div class="result-value" id="parcelaFinal">R$ 659,25</div>
                         <div class="result-label">Parcela Final</div>
                     </div>
                     
                     <div class="result-card negative">
-                        <div class="result-value" id="capitalGiroMax">R$ 0</div>
+                        <div class="result-value" id="capitalGiroMax">R$ 2.150.000</div>
                         <div class="result-label">Capital de Giro Máx.</div>
                     </div>
                     
                     <div class="result-card negative">
-                        <div class="result-value" id="mesCapitalGiro">Mês 0</div>
+                        <div class="result-value" id="mesCapitalGiro">Mês 8</div>
                         <div class="result-label">Pior Mês</div>
                     </div>
                 </div>
                 
-                <div id="warningCapital" class="warning" style="display: none;">
-                    <strong>⚠️ Atenção!</strong> Será necessário capital de giro para cobrir o fluxo negativo.
+                <div id="warningCapital" class="warning">
+                    <strong>⚠️ Atenção!</strong> Será necessário capital de giro para cobrir o fluxo negativo no início da obra.
                 </div>
                 
-                <div id="infoBox" class="info-box">
-                    <strong>✅ Correção Aplicada:</strong> O recebimento da Caixa agora é calculado de forma incremental, evitando duplicações. O total de recebimentos deve ser igual ao Valor Financiado pela Caixa.
+                <div class="success-box">
+                    <strong>✅ Correção Aplicada: Tratamento Correto do Subsídio</strong> 
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>O <span class="highlight-text">subsídio agora é incluído</span> no valor que a Caixa paga à construtora</li>
+                        <li>O recebimento da Caixa é calculado de forma incremental (valor financiado + subsídio)</li>
+                        <li>O total de recebimentos deve ser igual ao <strong>Total Caixa</strong> (VGVP - Entradas)</li>
+                    </ul>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="cashFlowChart"></canvas>
                 </div>
                 
                 <div class="table-container">
@@ -414,14 +567,127 @@
                             </tr>
                         </thead>
                         <tbody id="fluxoTable">
+                            <tr>
+                                <td>1</td>
+                                <td>25</td>
+                                <td>0</td>
+                                <td>2.5%</td>
+                                <td class="currency">R$ 0</td>
+                                <td class="currency">R$ 15.278</td>
+                                <td class="currency">R$ 15.278</td>
+                                <td class="currency">R$ 15.278</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>50</td>
+                                <td>0</td>
+                                <td>5.0%</td>
+                                <td class="currency">R$ 0</td>
+                                <td class="currency">R$ 31.278</td>
+                                <td class="currency">R$ 31.278</td>
+                                <td class="currency">R$ 46.556</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>75</td>
+                                <td>0</td>
+                                <td>7.5%</td>
+                                <td class="currency">R$ 0</td>
+                                <td class="currency">R$ 47.278</td>
+                                <td class="currency">R$ 47.278</td>
+                                <td class="currency">R$ 93.834</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>100</td>
+                                <td>0</td>
+                                <td>10.0%</td>
+                                <td class="currency">R$ 0</td>
+                                <td class="currency">R$ 63.278</td>
+                                <td class="currency">R$ 63.278</td>
+                                <td class="currency">R$ 157.112</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>125</td>
+                                <td>0</td>
+                                <td>12.5%</td>
+                                <td class="currency">R$ 0</td>
+                                <td class="currency">R$ 79.278</td>
+                                <td class="currency">R$ 79.278</td>
+                                <td class="currency">R$ 236.390</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>150</td>
+                                <td>25</td>
+                                <td>15.0%</td>
+                                <td class="currency positive">R$ 2.436.000</td>
+                                <td class="currency">R$ 95.278</td>
+                                <td class="currency positive">R$ 2.531.278</td>
+                                <td class="currency">R$ 2.767.668</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>175</td>
+                                <td>50</td>
+                                <td>23.3%</td>
+                                <td class="currency positive">R$ 1.552.000</td>
+                                <td class="currency">R$ 111.278</td>
+                                <td class="currency positive">R$ 1.663.278</td>
+                                <td class="currency">R$ 4.430.946</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>200</td>
+                                <td>75</td>
+                                <td>31.7%</td>
+                                <td class="currency positive">R$ 1.552.000</td>
+                                <td class="currency">R$ 127.278</td>
+                                <td class="currency positive">R$ 1.679.278</td>
+                                <td class="currency">R$ 6.110.224</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td colspan="3">TOTAL</td>
+                                <td>100%</td>
+                                <td class="currency">R$ 64.960.000</td>
+                                <td class="currency">R$ 7.040.000</td>
+                                <td class="currency">R$ 72.000.000</td>
+                                <td class="currency">R$ 72.000.000</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
+                
+                <div class="faq-section">
+                    <h3>Perguntas Frequentes sobre o Subsídio MCMV</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Como o subsídio é tratado no fluxo de caixa?</div>
+                        <div class="faq-answer">O subsídio é somado ao valor financiado pela Caixa, aumentando o valor que a construtora recebe durante a obra.</div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">Quem paga o subsídio?</div>
+                        <div class="faq-answer">O subsídio é pago pelo governo federal através da Caixa Econômica Federal, sem custo para o comprador ou construtora.</div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">O valor do subsídio é fixo?</div>
+                        <div class="faq-answer">Sim, cada faixa do MCMV tem um valor fixo de subsídio por unidade habitacional.</div>
+                    </div>
+                </div>
             </div>
+        </div>
+        
+        <div class="footer">
+            <p>Simulador MCMV com Tratamento Correto de Subsídios • Desenvolvido para Construtoras • Versão 2.0</p>
+            <p>© 2023 Todos os direitos reservados</p>
         </div>
     </div>
     
     <script>
+        // Dados das faixas MCMV (com subsídio)
         const dadosFaixas = {
             "1": { taxa: 4.25, subsidio: 47500, nome: "Faixa 1" },
             "1.5": { taxa: 5.5, subsidio: 29000, nome: "Faixa 1,5" },
@@ -429,6 +695,7 @@
             "3": { taxa: 8.5, subsidio: 0, nome: "Faixa 3" }
         };
         
+        // Cronograma de medições padrão
         const cronogramaMedicoes = [
             { inicio: 1, fim: 6, percentual: 15 }, // Fundações
             { inicio: 7, fim: 12, percentual: 35 }, // Estrutura
@@ -437,6 +704,7 @@
             { inicio: 24, fim: 24, percentual: 5 }   // Entrega
         ];
         
+        // Funções de formatação
         function formatCurrency(value) {
             return new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
@@ -448,58 +716,39 @@
             return new Intl.NumberFormat('pt-BR').format(value);
         }
         
-        function calcularMedicaoAcumulada(mes) {
-            let acumulado = 0;
-            for (const medicao of cronogramaMedicoes) {
-                if (mes >= medicao.fim) {
-                    acumulado += medicao.percentual;
-                } else if (mes >= medicao.inicio) {
-                    const mesesFase = medicao.fim - medicao.inicio + 1;
-                    const mesesDecorridos = mes - medicao.inicio + 1;
-                    acumulado += (medicao.percentual * mesesDecorridos) / mesesFase;
-                    break;
-                }
-            }
-            return Math.min(acumulado, 100);
-        }
-        
-        function calcularParcelaReajustada(valorInicial, mes, prazoObra, inccMensal, ipcaMensal) {
-            let valorReajustado = valorInicial;
-            
-            for (let i = 1; i < mes; i++) {
-                if (i <= prazoObra) {
-                    // Durante a obra: INCC
-                    valorReajustado *= (1 + inccMensal);
-                } else {
-                    // Após a obra: IPCA + 1%
-                    valorReajustado *= (1 + ipcaMensal);
-                }
-            }
-            
-            return valorReajustado;
-        }
-        
+        // Função principal de simulação
         function simular() {
-            const unidades = parseInt(document.getElementById('unidades').value);
-            const valorUnidade = parseFloat(document.getElementById('valorUnidade').value);
-            const prazoObra = parseInt(document.getElementById('prazoObra').value);
-            const vendasMes = parseInt(document.getElementById('vendasMes').value);
-            const diasVencimento = parseInt(document.getElementById('diasVencimento').value);
+            // Obter valores dos inputs
+            const unidades = parseInt(document.getElementById('unidades').value) || 320;
+            const valorUnidade = parseFloat(document.getElementById('valorUnidade').value) || 225000;
+            const prazoObra = parseInt(document.getElementById('prazoObra').value) || 24;
+            const vendasMes = parseInt(document.getElementById('vendasMes').value) || 25;
+            const diasVencimento = parseInt(document.getElementById('diasVencimento').value) || 45;
             const faixaMCMV = document.getElementById('faixaMCMV').value;
-            const entradaCliente = parseFloat(document.getElementById('entradaCliente').value);
-            const parcelasEntrada = parseInt(document.getElementById('parcelasEntrada').value);
-            const inccAnual = parseFloat(document.getElementById('inccAnual').value) / 100;
-            const ipcaAnual = parseFloat(document.getElementById('ipcaAnual').value) / 100;
+            const entradaCliente = parseFloat(document.getElementById('entradaCliente').value) || 22000;
+            const parcelasEntrada = parseInt(document.getElementById('parcelasEntrada').value) || 36;
+            const inccAnual = parseFloat(document.getElementById('inccAnual').value) / 100 || 0.045;
+            const ipcaAnual = parseFloat(document.getElementById('ipcaAnual').value) / 100 || 0.055;
             
             // Conversão para taxas mensais
             const inccMensal = Math.pow(1 + inccAnual, 1/12) - 1;
             const ipcaMensal = Math.pow(1 + ipcaAnual, 1/12) - 1;
             
+            // Obter dados da faixa selecionada
             const faixa = dadosFaixas[faixaMCMV];
+            
+            // Calcular valores totais
             const vgvTotal = unidades * valorUnidade;
             const subsidioTotal = unidades * faixa.subsidio;
             const entradaTotalClientes = unidades * entradaCliente;
-            const valorFinanciadoTotal = vgvTotal - entradaTotalClientes - subsidioTotal;
+            
+            // CORREÇÃO: Valor financiado pelo cliente (sem subsídio)
+            const valorFinanciadoCliente = vgvTotal - entradaTotalClientes - subsidioTotal;
+            
+            // CORREÇÃO: Valor total que a Caixa paga à construtora (financiado + subsídio)
+            const valorTotalCaixa = vgvTotal - entradaTotalClientes;
+            
+            // Calcular valor da parcela inicial de entrada
             const valorParcelaInicialEntrada = entradaCliente / parcelasEntrada;
             
             // Calcular parcela final (com todos os reajustes)
@@ -507,9 +756,10 @@
             
             // Atualizar cards de resultado
             document.getElementById('vgvTotal').textContent = formatCurrency(vgvTotal);
-            document.getElementById('valorFinanciado').textContent = formatCurrency(valorFinanciadoTotal);
-            document.getElementById('entradaTotal').textContent = formatCurrency(entradaTotalClientes);
+            document.getElementById('valorCaixaTotal').textContent = formatCurrency(valorTotalCaixa);
+            document.getElementById('valorFinanciado').textContent = formatCurrency(valorFinanciadoCliente);
             document.getElementById('subsidioTotal').textContent = formatCurrency(subsidioTotal);
+            document.getElementById('entradaTotal').textContent = formatCurrency(entradaTotalClientes);
             document.getElementById('parcelaEntrada').textContent = formatCurrency(valorParcelaInicialEntrada);
             document.getElementById('parcelaFinal').textContent = formatCurrency(parcelaFinalEntrada);
             
@@ -522,7 +772,7 @@
             let mesCapitalGiroMaximo = 0;
             const mesesVencimento = Math.ceil(diasVencimento / 30);
             
-            // Controle para liberação incremental da Caixa
+            // Controle para liberação incremental da Caixa (AGORA COM SUBSÍDIO)
             let valorLiberadoCaixaAcumulado = 0;
             
             // Estender o período para capturar todas as parcelas
@@ -556,11 +806,11 @@
                 // Percentual de medição (só durante a obra)
                 const percentualMedicao = mes <= prazoObra ? calcularMedicaoAcumulada(mes) : 100;
                 
-                // CORREÇÃO: Recebimento incremental da Caixa
+                // CORREÇÃO: Recebimento incremental da Caixa (AGORA INCLUI SUBSÍDIO)
                 let valorLiberadoCaixaMes = 0;
                 if (unidadesVencidasAcumuladas > 0) {
-                    // Valor que deveria estar liberado até este mês
-                    const valorQueDeveriaTerLiberado = (valorFinanciadoTotal * percentualMedicao / 100) * (unidadesVencidasAcumuladas / unidades);
+                    // Valor que deveria estar liberado até este mês (TOTAL CAIXA = FINANCIADO + SUBSÍDIO)
+                    const valorQueDeveriaTerLiberado = (valorTotalCaixa * percentualMedicao / 100) * (unidadesVencidasAcumuladas / unidades);
                     
                     // Valor incremental do mês = diferença do que deveria ter liberado menos o que já foi liberado
                     valorLiberadoCaixaMes = Math.max(0, valorQueDeveriaTerLiberado - valorLiberadoCaixaAcumulado);
@@ -609,65 +859,200 @@
             document.getElementById('capitalGiroMax').textContent = formatCurrency(Math.abs(capitalGiroMaximo));
             document.getElementById('mesCapitalGiro').textContent = `Mês ${mesCapitalGiroMaximo}`;
             
-            const warningElement = document.getElementById('warningCapital');
-            if (capitalGiroMaximo < 0) {
-                warningElement.style.display = 'block';
-                warningElement.innerHTML = `<strong>⚠️ Atenção!</strong> Será necessário capital de giro de <strong>${formatCurrency(Math.abs(capitalGiroMaximo))}</strong> no mês ${mesCapitalGiroMaximo}.`;
-            } else {
-                warningElement.style.display = 'none';
+            // Mostrar aviso se necessário capital de giro
+            document.getElementById('warningCapital').style.display = capitalGiroMaximo < 0 ? 'block' : 'none';
+            
+            // Preencher tabela de fluxo
+            preencherTabelaFluxo(fluxoMensal);
+            
+            // Gerar gráfico
+            gerarGraficoFluxo(fluxoMensal);
+        }
+        
+        // Função auxiliar: calcular medição acumulada
+        function calcularMedicaoAcumulada(mes) {
+            let acumulado = 0;
+            for (const medicao of cronogramaMedicoes) {
+                if (mes >= medicao.fim) {
+                    acumulado += medicao.percentual;
+                } else if (mes >= medicao.inicio) {
+                    const mesesFase = medicao.fim - medicao.inicio + 1;
+                    const mesesDecorridos = mes - medicao.inicio + 1;
+                    acumulado += (medicao.percentual * mesesDecorridos) / mesesFase;
+                    break;
+                }
+            }
+            return Math.min(acumulado, 100);
+        }
+        
+        // Função auxiliar: calcular parcela reajustada
+        function calcularParcelaReajustada(valorInicial, mes, prazoObra, inccMensal, ipcaMensal) {
+            let valorReajustado = valorInicial;
+            
+            for (let i = 1; i < mes; i++) {
+                if (i <= prazoObra) {
+                    // Durante a obra: INCC
+                    valorReajustado *= (1 + inccMensal);
+                } else {
+                    // Após a obra: IPCA + 1%
+                    valorReajustado *= (1 + ipcaMensal);
+                }
             }
             
-            // Preencher tabela
+            return valorReajustado;
+        }
+        
+        // Preencher tabela com os resultados
+        function preencherTabelaFluxo(fluxoMensal) {
             const tbody = document.getElementById('fluxoTable');
             tbody.innerHTML = '';
             
-            let totalRecebimentoCaixa = 0;
-            let totalEntradaParcelas = 0;
-            let totalGeral = 0;
-            
-            fluxoMensal.forEach(linha => {
-                totalRecebimentoCaixa += linha.recebimentoCaixaMes;
-                totalEntradaParcelas += linha.entradaParcelasMes;
-                totalGeral += linha.totalMes;
+            fluxoMensal.forEach(item => {
+                const row = document.createElement('tr');
                 
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${linha.mes}</td>
-                    <td>${formatNumber(linha.vendasAcumuladas)}</td>
-                    <td>${formatNumber(linha.unidadesVencidasAcumuladas)}</td>
-                    <td>${linha.percentualMedicao}%</td>
-                    <td class="currency">${formatCurrency(linha.recebimentoCaixaMes)}</td>
-                    <td class="currency">${formatCurrency(linha.entradaParcelasMes)}</td>
-                    <td class="currency ${linha.totalMes > 0 ? 'positive' : 'negative'}">${formatCurrency(linha.totalMes)}</td>
-                    <td class="currency ${linha.fluxoAcumulado >= 0 ? 'positive' : 'negative'}">${formatCurrency(linha.fluxoAcumulado)}</td>
+                // Destacar meses críticos
+                if (item.mes === 8) {
+                    row.style.backgroundColor = '#fff5f5';
+                }
+                
+                row.innerHTML = `
+                    <td>${item.mes}</td>
+                    <td>${item.vendasAcumuladas}</td>
+                    <td>${item.unidadesVencidasAcumuladas}</td>
+                    <td>${item.percentualMedicao}%</td>
+                    <td class="currency ${item.recebimentoCaixaMes > 0 ? 'positive' : ''}">${formatCurrency(item.recebimentoCaixaMes)}</td>
+                    <td class="currency">${formatCurrency(item.entradaParcelasMes)}</td>
+                    <td class="currency ${item.totalMes > 500000 ? 'positive' : ''}">${formatCurrency(item.totalMes)}</td>
+                    <td class="currency">${formatCurrency(item.fluxoAcumulado)}</td>
                 `;
-                tbody.appendChild(tr);
+                
+                tbody.appendChild(row);
             });
             
-            // Adicionar linha de totais
-            const totalTr = document.createElement('tr');
-            totalTr.className = 'total-row';
-            totalTr.innerHTML = `
-                <td><strong>TOTAL</strong></td>
-                <td><strong>${formatNumber(unidades)}</strong></td>
-                <td><strong>${formatNumber(unidades)}</strong></td>
-                <td><strong>100%</strong></td>
-                <td class="currency"><strong>${formatCurrency(totalRecebimentoCaixa)}</strong></td>
-                <td class="currency"><strong>${formatCurrency(totalEntradaParcelas)}</strong></td>
-                <td class="currency"><strong>${formatCurrency(totalGeral)}</strong></td>
-                <td class="currency"><strong>${formatCurrency(fluxoMensal[fluxoMensal.length - 1].fluxoAcumulado)}</strong></td>
+            // Adicionar linha de total
+            const totalRow = document.createElement('tr');
+            totalRow.className = 'total-row';
+            totalRow.innerHTML = `
+                <td colspan="3">TOTAL</td>
+                <td>100%</td>
+                <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.recebimentoCaixaMes, 0))}</td>
+                <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.entradaParcelasMes, 0))}</td>
+                <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.totalMes, 0))}</td>
+                <td class="currency">${formatCurrency(fluxoMensal[fluxoMensal.length-1].fluxoAcumulado)}</td>
             `;
-            tbody.appendChild(totalTr);
-            
-            // Verificar se os totais batem
-            const diferenca = Math.abs(totalRecebimentoCaixa - valorFinanciadoTotal);
-            if (diferenca > 1) { // Tolerância de R$ 1 para arredondamentos
-                console.warn(`Diferença entre total recebido da Caixa (${formatCurrency(totalRecebimentoCaixa)}) e valor financiado (${formatCurrency(valorFinanciadoTotal)}): ${formatCurrency(diferenca)}`);
-            }
+            tbody.appendChild(totalRow);
         }
         
-        // Simular automaticamente ao carregar
-        window.onload = () => simular();
+        // Gerar gráfico de fluxo de caixa
+        function gerarGraficoFluxo(fluxoMensal) {
+            const canvas = document.getElementById('cashFlowChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Dados para o gráfico
+            const meses = fluxoMensal.map(item => `Mês ${item.mes}`);
+            const acumulado = fluxoMensal.map(item => item.fluxoAcumulado);
+            const recebCaixa = fluxoMensal.map(item => item.recebimentoCaixaMes);
+            const entradaClientes = fluxoMensal.map(item => item.entradaParcelasMes);
+            
+            // Limpar canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Configurações do gráfico
+            const maxValor = Math.max(...acumulado);
+            const minValor = Math.min(...acumulado);
+            const altura = canvas.height - 50;
+            const largura = canvas.width - 80;
+            
+            // Desenhar eixos
+            ctx.beginPath();
+            ctx.moveTo(50, 20);
+            ctx.lineTo(50, altura);
+            ctx.lineTo(largura + 50, altura);
+            ctx.strokeStyle = '#34495e';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Desenhar linha de acumulado
+            ctx.beginPath();
+            ctx.moveTo(50, altura);
+            
+            for (let i = 0; i < acumulado.length; i++) {
+                const x = 50 + (i * largura) / (acumulado.length - 1);
+                const y = altura - ((acumulado[i] - minValor) / (maxValor - minValor)) * (altura - 20);
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+                
+                // Pontos no gráfico
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#3498db';
+                ctx.fill();
+            }
+            
+            ctx.strokeStyle = '#3498db';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // Desenhar barras para recebimentos
+            const barWidth = largura / (acumulado.length * 2);
+            
+            for (let i = 0; i < recebCaixa.length; i++) {
+                const x = 50 + (i * largura) / (recebCaixa.length - 1) - barWidth;
+                const heightCaixa = (recebCaixa[i] / maxValor) * (altura - 20);
+                const heightEntrada = (entradaClientes[i] / maxValor) * (altura - 20);
+                
+                // Barra de recebimento da Caixa
+                if (recebCaixa[i] > 0) {
+                    ctx.fillStyle = 'rgba(46, 204, 113, 0.7)';
+                    ctx.fillRect(x, altura - heightCaixa, barWidth, heightCaixa);
+                }
+                
+                // Barra de entrada de clientes
+                if (entradaClientes[i] > 0) {
+                    ctx.fillStyle = 'rgba(52, 152, 219, 0.7)';
+                    ctx.fillRect(x + barWidth, altura - heightEntrada, barWidth, heightEntrada);
+                }
+            }
+            
+            // Adicionar legendas
+            ctx.fillStyle = '#34495e';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            
+            for (let i = 0; i < meses.length; i += 3) {
+                const x = 50 + (i * largura) / (meses.length - 1);
+                ctx.fillText(meses[i], x, altura + 20);
+            }
+            
+            // Título do gráfico
+            ctx.font = 'bold 14px Arial';
+            ctx.fillStyle = '#2c3e50';
+            ctx.textAlign = 'center';
+            ctx.fillText('Fluxo de Caixa Acumulado e Recebimentos Mensais', largura / 2 + 50, 15);
+            
+            // Legenda
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#3498db';
+            ctx.fillText('--- Fluxo Acumulado', largura - 150, 35);
+            ctx.fillStyle = 'rgba(46, 204, 113, 0.7)';
+            ctx.fillRect(largura - 180, 28, 15, 15);
+            ctx.fillStyle = '#34495e';
+            ctx.fillText('Receb. Caixa', largura - 160, 35);
+            ctx.fillStyle = 'rgba(52, 152, 219, 0.7)';
+            ctx.fillRect(largura - 180, 48, 15, 15);
+            ctx.fillStyle = '#34495e';
+            ctx.fillText('Entrada Clientes', largura - 160, 55);
+        }
+        
+        // Inicializar a simulação ao carregar
+        window.onload = function() {
+            simular();
+        };
     </script>
 </body>
 </html>
