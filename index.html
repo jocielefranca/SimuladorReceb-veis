@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Fluxo de Caixa - MCMV com Subsídio (Corrigido)</title>
+    <title>Simulador de Fluxo de Caixa - MCMV com Subsídio (Paleta Verde)</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -14,7 +14,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            background: linear-gradient(135deg, #0a4d3a, #1a5f4a);
             min-height: 100vh;
             padding: 20px;
             color: #333;
@@ -30,7 +30,7 @@
         }
         
         .header {
-            background: linear-gradient(135deg, #0c2461, #1e3799, #4a69bd);
+            background: linear-gradient(135deg, #0a4d3a, #1a5f4a, #0a4d3a);
             color: white;
             padding: 30px;
             text-align: center;
@@ -85,10 +85,10 @@
         
         .section-title {
             font-size: 1.4rem;
-            color: #2c3e50;
+            color: #0a4d3a;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 3px solid #3498db;
+            border-bottom: 3px solid #00ff88;
             position: relative;
         }
         
@@ -99,7 +99,7 @@
             left: 0;
             width: 80px;
             height: 3px;
-            background: #e74c3c;
+            background: #66ffaa;
         }
         
         .input-group {
@@ -110,7 +110,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #34495e;
+            color: #1a5f4a;
         }
         
         .input-group input, .input-group select {
@@ -125,8 +125,8 @@
         
         .input-group input:focus, .input-group select:focus {
             outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            border-color: #00ff88;
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.2);
         }
         
         .input-row {
@@ -144,7 +144,7 @@
         .btn-simulate {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: linear-gradient(135deg, #0a4d3a, #00ff88);
             color: white;
             border: none;
             border-radius: 10px;
@@ -153,14 +153,14 @@
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 20px;
-            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+            box-shadow: 0 4px 10px rgba(0, 255, 136, 0.3);
             position: relative;
             overflow: hidden;
         }
         
         .btn-simulate:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.5);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.5);
         }
         
         .btn-simulate:active {
@@ -196,7 +196,7 @@
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
-            border-left: 4px solid #3498db;
+            border-left: 4px solid #00ff88;
             transition: transform 0.3s ease;
         }
         
@@ -210,21 +210,21 @@
         }
         
         .result-card.highlight {
-            border-left-color: #f39c12;
-            background: linear-gradient(to right, #ffffff, #fff8e6);
-            box-shadow: 0 5px 20px rgba(243, 156, 18, 0.2);
+            border-left-color: #0a4d3a;
+            background: linear-gradient(to right, #ffffff, #e8f5e9);
+            box-shadow: 0 5px 20px rgba(10, 77, 58, 0.2);
         }
         
         .result-value {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #2c3e50;
+            color: #0a4d3a;
             margin-bottom: 5px;
         }
         
         .result-label {
             font-size: 0.9rem;
-            color: #7f8c8d;
+            color: #1a5f4a;
         }
         
         .table-container {
@@ -244,7 +244,7 @@
         }
         
         th {
-            background: linear-gradient(to bottom, #2c3e50, #34495e);
+            background: linear-gradient(to bottom, #0a4d3a, #1a5f4a);
             color: white;
             padding: 12px 10px;
             text-align: left;
@@ -261,11 +261,11 @@
         }
         
         tr:nth-child(even) {
-            background-color: #f8f9fa;
+            background-color: rgba(102, 255, 170, 0.1);
         }
         
         tr:hover {
-            background-color: #e8f4fd;
+            background-color: rgba(0, 255, 136, 0.15);
         }
         
         .currency {
@@ -274,7 +274,7 @@
         }
         
         .positive {
-            color: #27ae60;
+            color: #0a4d3a;
         }
         
         .negative {
@@ -282,7 +282,7 @@
         }
         
         .total-row {
-            background: linear-gradient(to right, #2c3e50, #34495e) !important;
+            background: linear-gradient(to right, #0a4d3a, #1a5f4a) !important;
             color: white !important;
             font-weight: bold;
         }
@@ -323,13 +323,13 @@
         .footer {
             text-align: center;
             padding: 20px;
-            background: #2c3e50;
+            background: #0a4d3a;
             color: white;
             font-size: 0.9rem;
         }
         
         .highlight-text {
-            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            background: linear-gradient(135deg, #00ff88, #66ffaa);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -337,15 +337,15 @@
         }
         
         .subsidy-explanation {
-            background: #f0f7ff;
+            background: #e8f5e9;
             border-radius: 10px;
             padding: 15px;
             margin-top: 20px;
-            border: 1px dashed #3498db;
+            border: 1px dashed #0a4d3a;
         }
         
         .subsidy-explanation h3 {
-            color: #2980b9;
+            color: #0a4d3a;
             margin-bottom: 10px;
         }
         
@@ -372,28 +372,64 @@
         
         .chart-btn {
             padding: 5px 10px;
-            background: #3498db;
+            background: #0a4d3a;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        
+        .chart-btn:hover {
+            background: #1a5f4a;
         }
         
         .chart-btn.active {
-            background: #2c3e50;
+            background: #00ff88;
+            color: #0a4d3a;
+            font-weight: bold;
         }
         
         .correction-value {
-            color: #d35400;
+            color: #1a5f4a;
             font-weight: 600;
         }
+        
+        .paleta-info {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #0a4d3a;
+        }
+        
+        .paleta-colors {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+        
+        .color-box:nth-child(1) { background: #0a4d3a; }
+        .color-box:nth-child(2) { background: #66ffaa; }
+        .color-box:nth-child(3) { background: rgba(255, 255, 255, 0.1); border: 1px solid #ddd; }
+        .color-box:nth-child(4) { background: #00ff88; }
+        .color-box:nth-child(5) { background: #1a5f4a; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Simulador de Fluxo de Caixa - MCMV (Corrigido)</h1>
+            <h1>Simulador de Fluxo de Caixa - MCMV (Paleta Verde)</h1>
             <p>Planejamento financeiro para obras financiadas pela Caixa Econômica Federal com tratamento correto de subsídios e reajustes</p>
         </div>
         
@@ -492,6 +528,18 @@
                 <button class="btn-simulate" onclick="simular()">
                     Simular Fluxo de Caixa
                 </button>
+                
+                <div class="paleta-info">
+                    <p>Paleta de cores aplicada:</p>
+                    <div class="paleta-colors">
+                        <div class="color-box"></div>
+                        <div class="color-box"></div>
+                        <div class="color-box"></div>
+                        <div class="color-box"></div>
+                        <div class="color-box"></div>
+                    </div>
+                    <p>#0a4d3a #66ffaa rgba(255,255,255,0.1) #00ff88 #1a5f4a</p>
+                </div>
             </div>
             
             <div class="results-section">
@@ -549,11 +597,12 @@
                 </div>
                 
                 <div class="success-box">
-                    <strong>✅ Correções Implementadas com Sucesso</strong> 
+                    <strong>✅ Paleta Verde Aplicada com Sucesso</strong> 
                     <ul style="margin: 10px 0; padding-left: 20px;">
-                        <li>Adicionada <span class="highlight-text">coluna de INCC</span> para mostrar separadamente o valor do reajuste</li>
-                        <li>Corrigido cálculo da entrada reajustada para refletir o valor correto de R$ 7.040.000,00</li>
-                        <li>Ajustado cálculo dos totais para considerar corretamente a correção monetária</li>
+                        <li>Cabeçalho e botões em gradiente com <span class="highlight-text">#0a4d3a e #00ff88</span></li>
+                        <li>Cartões de resultado com bordas em <span class="highlight-text">#00ff88</span> e destaque em <span class="highlight-text">#0a4d3a</span></li>
+                        <li>Tabela com cabeçalho em <span class="highlight-text">#0a4d3a</span> e linhas alternadas em <span class="highlight-text">#66ffaa</span></li>
+                        <li>Gráficos com cores da paleta verde</li>
                     </ul>
                 </div>
                 
@@ -592,7 +641,7 @@
         </div>
         
         <div class="footer">
-            <p>Simulador MCMV com Tratamento Correto de Subsídios • Desenvolvido para Construtoras • Versão 2.2 (Corrigida)</p>
+            <p>Simulador MCMV com Tratamento Correto de Subsídios • Desenvolvido para Construtoras • Versão 2.3 (Paleta Verde)</p>
             <p>© 2023 Todos os direitos reservados</p>
         </div>
     </div>
@@ -889,8 +938,8 @@
                 datasets.push({
                     label: 'Fluxo Acumulado',
                     data: acumulado,
-                    borderColor: '#3498db',
-                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    borderColor: '#0a4d3a',
+                    backgroundColor: 'rgba(10, 77, 58, 0.1)',
                     borderWidth: 3,
                     fill: true,
                     tension: 0.3
@@ -899,24 +948,24 @@
                 datasets.push({
                     label: 'Recebimento Caixa',
                     data: recebCaixa,
-                    backgroundColor: 'rgba(46, 204, 113, 0.7)',
-                    borderColor: 'rgba(46, 204, 113, 1)',
+                    backgroundColor: 'rgba(0, 255, 136, 0.7)',
+                    borderColor: '#0a4d3a',
                     borderWidth: 1
                 });
                 
                 datasets.push({
                     label: 'Entrada Clientes',
                     data: entradaClientes,
-                    backgroundColor: 'rgba(52, 152, 219, 0.7)',
-                    borderColor: 'rgba(52, 152, 219, 1)',
+                    backgroundColor: 'rgba(102, 255, 170, 0.7)',
+                    borderColor: '#1a5f4a',
                     borderWidth: 1
                 });
                 
                 datasets.push({
                     label: 'Correção INCC',
                     data: correcaoINCC,
-                    backgroundColor: 'rgba(243, 156, 18, 0.7)',
-                    borderColor: 'rgba(243, 156, 18, 1)',
+                    backgroundColor: 'rgba(26, 95, 74, 0.7)',
+                    borderColor: '#0a4d3a',
                     borderWidth: 1
                 });
             }
