@@ -479,558 +479,587 @@
                 <div class="input-row">
                     <div class="input-group">
                         <label>Entrada Cliente (R$):</label>
-                        <input type="number" id="entradaCliente" value="22000" min="0">
-                    </div>
-                    
-                    <div class="input-group">
-                        <label>Parcelas da Entrada:</label>
-                        <select id="parcelasEntrada">
-                            <option value="24">24x</option>
-                            <option value="30">30x</option>
-                            <option value="36" selected>36x</option>
-                            <option value="42">42x</option>
-                            <option value="48">48x</option>
-                            <option value="54">54x</option>
-                            <option value="60">60x</option>
-                            <option value="72">72x</option>
-                            <option value="80">80x</option>
-                        </select>
-                    </div>
-                </div>
-
-                <h2 class="section-title">Reajustes da Entrada</h2>
-                
-                <div class="input-row">
-                    <div class="input-group">
-                        <label>INCC (% ao ano - durante obra):</label>
-                        <input type="number" id="inccAnual" value="4.5" min="0" max="20" step="0.1">
-                    </div>
-                    
-                    <div class="input-group">
-                        <label>IPCA+1% (% ao ano - pós obra):</label>
-                        <input type="number" id="ipcaAnual" value="5.5" min="0" max="20" step="0.1">
-                    </div>
+                    <input type="number" id="entradaCliente" value="22000" min="0">
                 </div>
                 
                 <div class="input-group">
-                    <label>Sistema de Amortização:</label>
-                    <select id="sistema">
-                        <option value="SAC" selected>SAC</option>
-                        <option value="PRICE">PRICE</option>
+                    <label>Parcelas da Entrada:</label>
+                    <select id="parcelasEntrada">
+                        <option value="24">24x</option>
+                        <option value="30">30x</option>
+                        <option value="36" selected>36x</option>
+                        <option value="42">42x</option>
+                        <option value="48">48x</option>
+                        <option value="54">54x</option>
+                        <option value="60">60x</option>
+                        <option value="72">72x</option>
+                        <option value="80">80x</option>
                     </select>
                 </div>
-                
-                <div class="subsidy-explanation">
-                    <h3> Regras </h3>
-                    <p>1. INCC </p>
-                    <p>2. Conograma de obra </p>
-                    <p>3. IPCA +1 </p>
+            </div>
+
+            <h2 class="section-title">Reajustes da Entrada</h2>
+            
+            <div class="input-row">
+                <div class="input-group">
+                    <label>INCC (% ao ano - durante obra):</label>
+                    <input type="number" id="inccAnual" value="4.5" min="0" max="20" step="0.1">
                 </div>
                 
-                <button class="btn-simulate" onclick="simular()">
-                    Simular Fluxo de Caixa
-                </button>
-                
-                <div class="paleta-info">
-                    <p>Paleta de cores aplicada:</p>
-                    <div class="paleta-colors">
-                        <div class="color-box"></div>
-                        <div class="color-box"></div>
-                        <div class="color-box"></div>
-                        <div class="color-box"></div>
-                        <div class="color-box"></div>
-                    </div>
-                    <p>#0a4d3a #66ffaa rgba(255,255,255,0.1) #00ff88 #1a5f4a</p>
+                <div class="input-group">
+                    <label>IPCA+1% (% ao ano - pós obra):</label>
+                    <input type="number" id="ipcaAnual" value="5.5" min="0" max="20" step="0.1">
                 </div>
             </div>
             
-            <div class="results-section">
-                <h2 class="section-title">Resultados da Simulação</h2>
-                
-                <div class="results-grid">
-                    <div class="result-card">
-                        <div class="result-value" id="vgvTotal">R$ 72.000.000</div>
-                        <div class="result-label">VGV Total</div>
-                    </div>
-                    
-                    <div class="result-card highlight">
-                        <div class="result-value" id="valorCaixaTotal">R$ 64.960.000</div>
-                        <div class="result-label">Total Caixa (Financ.+Subs.)</div>
-                    </div>
-                    
-                    <div class="result-card">
-                        <div class="result-value" id="valorFinanciado">R$ 62.720.000</div>
-                        <div class="result-label">Valor Financiado</div>
-                    </div>
-                    
-                    <div class="result-card">
-                        <div class="result-value" id="subsidioTotal">R$ 9.280.000</div>
-                        <div class="result-label">Subsídio Total</div>
-                    </div>
-                    
-                    <div class="result-card">
-                        <div class="result-value" id="entradaTotal">R$ 7.040.000</div>
-                        <div class="result-label">Entrada Total Clientes</div>
-                    </div>
-                    
-                    <div class="result-card">
-                        <div class="result-value" id="parcelaEntrada">R$ 611,11</div>
-                        <div class="result-label">Parcela Inicial</div>
-                    </div>
-                    
-                    <div class="result-card">
-                        <div class="result-value" id="parcelaFinal">R$ 659,25</div>
-                        <div class="result-label">Parcela Final</div>
-                    </div>
-                    
-                    <div class="result-card negative">
-                        <div class="result-value" id="capitalGiroMax">R$ 2.150.000</div>
-                        <div class="result-label">Capital de Giro Máx.</div>
-                    </div>
-                    
-                    <div class="result-card negative">
-                        <div class="result-value" id="mesCapitalGiro">Mês 8</div>
-                        <div class="result-label">Pior Mês</div>
-                    </div>
+            <div class="input-group">
+                <label>Sistema de Amortização:</label>
+                <select id="sistema">
+                    <option value="SAC" selected>SAC</option>
+                    <option value="PRICE">PRICE</option>
+                </select>
+            </div>
+            
+            <div class="subsidy-explanation">
+                <h3> Regras </h3>
+                <p>1. INCC </p>
+                <p>2. Cronograma de obra </p>
+                <p>3. IPCA +1 </p>
+            </div>
+            
+            <button class="btn-simulate" onclick="simular()">
+                Simular Fluxo de Caixa
+            </button>
+            
+            <div class="paleta-info">
+                <p>Paleta de cores aplicada:</p>
+                <div class="paleta-colors">
+                    <div class="color-box"></div>
+                    <div class="color-box"></div>
+                    <div class="color-box"></div>
+                    <div class="color-box"></div>
+                    <div class="color-box"></div>
                 </div>
-                
-                <div id="warningCapital" class="warning">
-                    <strong>⚠️ Atenção!</strong> Será necessário capital de giro para cobrir o fluxo negativo no início da obra.
-                </div>
-              
-                <div class="chart-container">
-                    <div class="chart-header">
-                        <h3>Fluxo de Caixa</h3>
-                        <div class="chart-controls">
-                            <button class="chart-btn active" onclick="changeChartType('acumulado')">Acumulado</button>
-                            <button class="chart-btn" onclick="changeChartType('mensal')">Mensal</button>
-                        </div>
-                    </div>
-                    <canvas id="cashFlowChart"></canvas>
-                </div>
-                
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Mês</th>
-                                <th>Vendas Acum.</th>
-                                <th>Unid. Vencidas</th>
-                                <th>% Medição</th>
-                                <th>Receb. Caixa (Mês)</th>
-                                <th>Entrada Reajustada</th>
-                                <th>INCC</th>
-                                <th>Total Mês</th>
-                                <th>Acumulado</th>
-                            </tr>
-                        </thead>
-                        <tbody id="fluxoTable">
-                            <!-- Conteúdo será preenchido via JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
+                <p>#0a4d3a #66ffaa rgba(255,255,255,0.1) #00ff88 #1a5f4a</p>
             </div>
         </div>
         
-        <div class="footer">
-            <p>Simulador MCMV com Tratamento Correto de Subsídios • Desenvolvido para Grupo Diagonal • Versão 2.3 </p>
-            <p>© 2025 Todos os direitos reservados</p>
+        <div class="results-section">
+            <h2 class="section-title">Resultados da Simulação</h2>
+            
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-value" id="vgvTotal">R$ 72.000.000</div>
+                    <div class="result-label">VGV Total</div>
+                </div>
+                
+                <div class="result-card highlight">
+                    <div class="result-value" id="valorCaixaTotal">R$ 64.960.000</div>
+                    <div class="result-label">Total Caixa (Financ.+Subs.)</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-value" id="valorFinanciado">R$ 62.720.000</div>
+                    <div class="result-label">Valor Financiado</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-value" id="subsidioTotal">R$ 9.280.000</div>
+                    <div class="result-label">Subsídio Total</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-value" id="entradaTotal">R$ 7.040.000</div>
+                    <div class="result-label">Entrada Total Clientes</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-value" id="parcelaEntrada">R$ 611,11</div>
+                    <div class="result-label">Parcela Inicial</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-value" id="parcelaFinal">R$ 659,25</div>
+                    <div class="result-label">Parcela Final</div>
+                </div>
+                
+                <div class="result-card negative">
+                    <div class="result-value" id="capitalGiroMax">R$ 2.150.000</div>
+                    <div class="result-label">Capital de Giro Máx.</div>
+                </div>
+                
+                <div class="result-card negative">
+                    <div class="result-value" id="mesCapitalGiro">Mês 8</div>
+                    <div class="result-label">Pior Mês</div>
+                </div>
+            </div>
+            
+            <div id="warningCapital" class="warning">
+                <strong>⚠️ Atenção!</strong> Será necessário capital de giro para cobrir o fluxo negativo no início da obra.
+            </div>
+          
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Fluxo de Caixa</h3>
+                    <div class="chart-controls">
+                        <button class="chart-btn active" onclick="changeChartType('acumulado')">Acumulado</button>
+                        <button class="chart-btn" onclick="changeChartType('mensal')">Mensal</button>
+                    </div>
+                </div>
+                <canvas id="cashFlowChart"></canvas>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mês</th>
+                            <th>Vendas Acum.</th>
+                            <th>Unid. Vencidas</th>
+                            <th>% Medição</th>
+                            <th>Receb. Caixa (Mês)</th>
+                            <th>Entrada Reajustada</th>
+                            <th>INCC</th>
+                            <th>Total Mês</th>
+                            <th>Acumulado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fluxoTable">
+                        <!-- Conteúdo será preenchido via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     
-    <script>
-        // Dados das faixas MCMV (com subsídio)
-        const dadosFaixas = {
-            "1": { taxa: 4.25, subsidio: 47500, nome: "Faixa 1" },
-            "1.5": { taxa: 5.5, subsidio: 29000, nome: "Faixa 1,5" },
-            "2": { taxa: 7.5, subsidio: 25000, nome: "Faixa 2" },
-            "3": { taxa: 8.5, subsidio: 0, nome: "Faixa 3" }
-        };
-        
-        // Cronograma de medições padrão
-        const cronogramaMedicoes = [
-            { inicio: 1, fim: 6, percentual: 15 }, // Fundações
-            { inicio: 7, fim: 12, percentual: 35 }, // Estrutura
-            { inicio: 13, fim: 18, percentual: 25 }, // Instalações
-            { inicio: 19, fim: 23, percentual: 20 }, // Acabamentos
-            { inicio: 24, fim: 24, percentual: 5 }   // Entrega
+    <div class="footer">
+        <p>Simulador MCMV com Tratamento Correto de Subsídios • Desenvolvido para Grupo Diagonal • Versão 2.3 </p>
+        <p>© 2025 Todos os direitos reservados</p>
+    </div>
+</div>
+
+<script>
+    // Dados das faixas MCMV (com subsídio)
+    const dadosFaixas = {
+        "1": { taxa: 4.25, subsidio: 47500, nome: "Faixa 1" },
+        "1.5": { taxa: 5.5, subsidio: 29000, nome: "Faixa 1,5" },
+        "2": { taxa: 7.5, subsidio: 25000, nome: "Faixa 2" },
+        "3": { taxa: 8.5, subsidio: 0, nome: "Faixa 3" }
+    };
+    
+    // Função para gerar cronograma dinâmico baseado no prazo
+    function gerarCronograma(prazoObra) {
+        const proporcoes = [
+            { fase: "Fundações", proporcao: 0.25, percentual: 15 },
+            { fase: "Estrutura", proporcao: 0.25, percentual: 35 },
+            { fase: "Instalações", proporcao: 0.25, percentual: 25 },
+            { fase: "Acabamentos", proporcao: 0.20, percentual: 20 },
+            { fase: "Entrega", proporcao: 0.05, percentual: 5 }
         ];
-        
-        // Variáveis globais para gráfico
-        let cashFlowChart = null;
-        let chartType = 'acumulado';
-        
-        // Funções de formatação
-        function formatCurrency(value) {
-            return new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-            }).format(value);
+
+        let inicio = 1;
+        const cronograma = [];
+
+        for (const etapa of proporcoes) {
+            const duracao = Math.max(1, Math.round(prazoObra * etapa.proporcao));
+            const fim = Math.min(prazoObra, inicio + duracao - 1);
+            
+            cronograma.push({
+                inicio: inicio,
+                fim: fim,
+                percentual: etapa.percentual
+            });
+
+            inicio = fim + 1;
+            if (inicio > prazoObra) break;
         }
-        
-        function formatNumber(value) {
-            return new Intl.NumberFormat('pt-BR').format(value);
+
+        // Ajuste final para garantir que a última etapa termine no prazo
+        if (cronograma.length > 0) {
+            cronograma[cronograma.length - 1].fim = prazoObra;
         }
+
+        return cronograma;
+    }
+    
+    // Variáveis globais para gráfico
+    let cashFlowChart = null;
+    let chartType = 'acumulado';
+    
+    // Funções de formatação
+    function formatCurrency(value) {
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(value);
+    }
+    
+    function formatNumber(value) {
+        return new Intl.NumberFormat('pt-BR').format(value);
+    }
+    
+    // Função principal de simulação
+    function simular() {
+        // Obter valores dos inputs
+        const unidades = parseInt(document.getElementById('unidades').value) || 320;
+        const valorUnidade = parseFloat(document.getElementById('valorUnidade').value) || 225000;
+        const prazoObra = parseInt(document.getElementById('prazoObra').value) || 24;
+        const vendasMes = parseInt(document.getElementById('vendasMes').value) || 25;
+        const diasVencimento = parseInt(document.getElementById('diasVencimento').value) || 45;
+        const faixaMCMV = document.getElementById('faixaMCMV').value;
+        const entradaCliente = parseFloat(document.getElementById('entradaCliente').value) || 22000;
+        const parcelasEntrada = parseInt(document.getElementById('parcelasEntrada').value) || 36;
+        const inccAnual = parseFloat(document.getElementById('inccAnual').value) / 100 || 0.045;
+        const ipcaAnual = parseFloat(document.getElementById('ipcaAnual').value) / 100 || 0.055;
         
-        // Função principal de simulação
-        function simular() {
-            // Obter valores dos inputs
-            const unidades = parseInt(document.getElementById('unidades').value) || 320;
-            const valorUnidade = parseFloat(document.getElementById('valorUnidade').value) || 225000;
-            const prazoObra = parseInt(document.getElementById('prazoObra').value) || 24;
-            const vendasMes = parseInt(document.getElementById('vendasMes').value) || 25;
-            const diasVencimento = parseInt(document.getElementById('diasVencimento').value) || 45;
-            const faixaMCMV = document.getElementById('faixaMCMV').value;
-            const entradaCliente = parseFloat(document.getElementById('entradaCliente').value) || 22000;
-            const parcelasEntrada = parseInt(document.getElementById('parcelasEntrada').value) || 36;
-            const inccAnual = parseFloat(document.getElementById('inccAnual').value) / 100 || 0.045;
-            const ipcaAnual = parseFloat(document.getElementById('ipcaAnual').value) / 100 || 0.055;
+        // GERAR CRONOGRAMA DINÂMICO baseado no prazo da obra
+        const cronogramaMedicoes = gerarCronograma(prazoObra);
+        
+        // Conversão para taxas mensais
+        const inccMensal = Math.pow(1 + inccAnual, 1/12) - 1;
+        const ipcaMensal = Math.pow(1 + ipcaAnual, 1/12) - 1;
+        
+        // Obter dados da faixa selecionada
+        const faixa = dadosFaixas[faixaMCMV];
+        
+        // Calcular valores totais
+        const vgvTotal = unidades * valorUnidade;
+        const subsidioTotal = unidades * faixa.subsidio;
+        const entradaTotalClientes = unidades * entradaCliente;
+        
+        // CORREÇÃO: Valor financiado pelo cliente (sem subsídio)
+        const valorFinanciadoCliente = vgvTotal - entradaTotalClientes - subsidioTotal;
+        
+        // CORREÇÃO: Valor total que a Caixa paga à construtora (financiado + subsídio)
+        const valorTotalCaixa = vgvTotal - entradaTotalClientes;
+        
+        // Calcular valor da parcela inicial de entrada
+        const valorParcelaInicialEntrada = entradaCliente / parcelasEntrada;
+        
+        // Calcular parcela final (com todos os reajustes)
+        const parcelaFinalEntrada = calcularParcelaReajustada(valorParcelaInicialEntrada, parcelasEntrada, prazoObra, inccMensal, ipcaMensal);
+        
+        // Atualizar cards de resultado
+        document.getElementById('vgvTotal').textContent = formatCurrency(vgvTotal);
+        document.getElementById('valorCaixaTotal').textContent = formatCurrency(valorTotalCaixa);
+        document.getElementById('valorFinanciado').textContent = formatCurrency(valorFinanciadoCliente);
+        document.getElementById('subsidioTotal').textContent = formatCurrency(subsidioTotal);
+        document.getElementById('entradaTotal').textContent = formatCurrency(entradaTotalClientes);
+        document.getElementById('parcelaEntrada').textContent = formatCurrency(valorParcelaInicialEntrada);
+        document.getElementById('parcelaFinal').textContent = formatCurrency(parcelaFinalEntrada);
+        
+        // Calcular fluxo mês a mês
+        const fluxoMensal = [];
+        let vendasAcumuladas = 0;
+        let unidadesVencidasAcumuladas = 0;
+        let fluxoAcumulado = 0;
+        let capitalGiroMaximo = 0;
+        let mesCapitalGiroMaximo = 0;
+        const mesesVencimento = Math.ceil(diasVencimento / 30);
+        
+        // Controle para liberação incremental da Caixa (AGORA COM SUBSÍDIO)
+        let valorLiberadoCaixaAcumulado = 0;
+        
+        // Estender o período para capturar todas as parcelas
+        const periodoTotal = prazoObra + parcelasEntrada + 6;
+        
+        for (let mes = 1; mes <= periodoTotal; mes++) {
+            // Vendas do mês (só durante o período de vendas)
+            let vendasMes_atual = 0;
+            if (mes <= prazoObra && vendasAcumuladas < unidades) {
+                vendasMes_atual = Math.min(vendasMes, unidades - vendasAcumuladas);
+                vendasAcumuladas += vendasMes_atual;
+            }
             
-            // Conversão para taxas mensais
-            const inccMensal = Math.pow(1 + inccAnual, 1/12) - 1;
-            const ipcaMensal = Math.pow(1 + ipcaAnual, 1/12) - 1;
-            
-            // Obter dados da faixa selecionada
-            const faixa = dadosFaixas[faixaMCMV];
-            
-            // Calcular valores totais
-            const vgvTotal = unidades * valorUnidade;
-            const subsidioTotal = unidades * faixa.subsidio;
-            const entradaTotalClientes = unidades * entradaCliente;
-            
-            // CORREÇÃO: Valor financiado pelo cliente (sem subsídio)
-            const valorFinanciadoCliente = vgvTotal - entradaTotalClientes - subsidioTotal;
-            
-            // CORREÇÃO: Valor total que a Caixa paga à construtora (financiado + subsídio)
-            const valorTotalCaixa = vgvTotal - entradaTotalClientes;
-            
-            // Calcular valor da parcela inicial de entrada
-            const valorParcelaInicialEntrada = entradaCliente / parcelasEntrada;
-            
-            // Calcular parcela final (com todos os reajustes)
-            const parcelaFinalEntrada = calcularParcelaReajustada(valorParcelaInicialEntrada, parcelasEntrada, prazoObra, inccMensal, ipcaMensal);
-            
-            // Atualizar cards de resultado
-            document.getElementById('vgvTotal').textContent = formatCurrency(vgvTotal);
-            document.getElementById('valorCaixaTotal').textContent = formatCurrency(valorTotalCaixa);
-            document.getElementById('valorFinanciado').textContent = formatCurrency(valorFinanciadoCliente);
-            document.getElementById('subsidioTotal').textContent = formatCurrency(subsidioTotal);
-            document.getElementById('entradaTotal').textContent = formatCurrency(entradaTotalClientes);
-            document.getElementById('parcelaEntrada').textContent = formatCurrency(valorParcelaInicialEntrada);
-            document.getElementById('parcelaFinal').textContent = formatCurrency(parcelaFinalEntrada);
-            
-            // Calcular fluxo mês a mês
-            const fluxoMensal = [];
-            let vendasAcumuladas = 0;
-            let unidadesVencidasAcumuladas = 0;
-            let fluxoAcumulado = 0;
-            let capitalGiroMaximo = 0;
-            let mesCapitalGiroMaximo = 0;
-            const mesesVencimento = Math.ceil(diasVencimento / 30);
-            
-            // Controle para liberação incremental da Caixa (AGORA COM SUBSÍDIO)
-            let valorLiberadoCaixaAcumulado = 0;
-            
-            // Estender o período para capturar todas as parcelas
-            const periodoTotal = prazoObra + parcelasEntrada + 6;
-            
-            for (let mes = 1; mes <= periodoTotal; mes++) {
-                // Vendas do mês (só durante o período de vendas)
-                let vendasMes_atual = 0;
-                if (mes <= prazoObra && vendasAcumuladas < unidades) {
-                    vendasMes_atual = Math.min(vendasMes, unidades - vendasAcumuladas);
-                    vendasAcumuladas += vendasMes_atual;
-                }
-                
-                // Unidades vencidas (com delay) - incremento do mês
-                let novasUnidadesVencidas = 0;
-                if (mes > mesesVencimento) {
-                    const mesVenda = mes - mesesVencimento;
-                    if (mesVenda >= 1 && mesVenda <= prazoObra) {
-                        // Calcular quantas unidades foram vendidas no mês que agora vence
-                        const vendasAcumuladasAteAnterior = Math.max(0, (mesVenda - 1) * vendasMes);
-                        const vendasAcumuladasAteMesVenda = Math.min(unidades, mesVenda * vendasMes);
-                        const vendasDoMesQueVence = vendasAcumuladasAteMesVenda - vendasAcumuladasAteAnterior;
-                        
-                        if (vendasDoMesQueVence > 0 && unidadesVencidasAcumuladas < unidades) {
-                            novasUnidadesVencidas = Math.min(vendasDoMesQueVence, unidades - unidadesVencidasAcumuladas);
-                            unidadesVencidasAcumuladas += novasUnidadesVencidas;
-                        }
-                    }
-                }
-                
-                // Percentual de medição (só durante a obra)
-                const percentualMedicao = mes <= prazoObra ? calcularMedicaoAcumulada(mes) : 100;
-                
-                // CORREÇÃO: Recebimento incremental da Caixa (AGORA INCLUI SUBSÍDIO)
-                let valorLiberadoCaixaMes = 0;
-                if (unidadesVencidasAcumuladas > 0) {
-                    // Valor que deveria estar liberado até este mês (TOTAL CAIXA = FINANCIADO + SUBSÍDIO)
-                    const valorQueDeveriaTerLiberado = (valorTotalCaixa * percentualMedicao / 100) * (unidadesVencidasAcumuladas / unidades);
+            // Unidades vencidas (com delay) - incremento do mês
+            let novasUnidadesVencidas = 0;
+            if (mes > mesesVencimento) {
+                const mesVenda = mes - mesesVencimento;
+                if (mesVenda >= 1 && mesVenda <= prazoObra) {
+                    // Calcular quantas unidades foram vendidas no mês que agora vence
+                    const vendasAcumuladasAteAnterior = Math.max(0, (mesVenda - 1) * vendasMes);
+                    const vendasAcumuladasAteMesVenda = Math.min(unidades, mesVenda * vendasMes);
+                    const vendasDoMesQueVence = vendasAcumuladasAteMesVenda - vendasAcumuladasAteAnterior;
                     
-                    // Valor incremental do mês = diferença do que deveria ter liberado menos o que já foi liberado
-                    valorLiberadoCaixaMes = Math.max(0, valorQueDeveriaTerLiberado - valorLiberadoCaixaAcumulado);
-                    valorLiberadoCaixaAcumulado += valorLiberadoCaixaMes;
+                    if (vendasDoMesQueVence > 0 && unidadesVencidasAcumuladas < unidades) {
+                        novasUnidadesVencidas = Math.min(vendasDoMesQueVence, unidades - unidadesVencidasAcumuladas);
+                        unidadesVencidasAcumuladas += novasUnidadesVencidas;
+                    }
                 }
+            }
+            
+            // Percentual de medição (só durante a obra) - usando o cronograma gerado
+            const percentualMedicao = mes <= prazoObra ? calcularMedicaoAcumulada(mes, cronogramaMedicoes) : 100;
+            
+            // CORREÇÃO: Recebimento incremental da Caixa (AGORA INCLUI SUBSÍDIO)
+            let valorLiberadoCaixaMes = 0;
+            if (unidadesVencidasAcumuladas > 0) {
+                // Valor que deveria estar liberado até este mês (TOTAL CAIXA = FINANCIADO + SUBSÍDIO)
+                const valorQueDeveriaTerLiberado = (valorTotalCaixa * percentualMedicao / 100) * (unidadesVencidasAcumuladas / unidades);
                 
-                // Entrada de clientes - parcelas reajustadas
-                let entradaParcelasMes = 0;
-                let correcaoINCCMes = 0;
-                if (mes <= parcelasEntrada) {
-                    // Para cada mês de venda ativo, calcular as parcelas que vencem neste mês
-                    for (let mesVenda = 1; mesVenda <= Math.min(mes, prazoObra); mesVenda++) {
-                        const parcelaDoMesVenda = mes - mesVenda + 1; // Qual parcela deste mês de venda
-                        if (parcelaDoMesVenda <= parcelasEntrada) {
-                            const unidadesVendidasNoMes = Math.min(vendasMes, Math.max(0, unidades - (mesVenda - 1) * vendasMes));
-                            if (unidadesVendidasNoMes > 0) {
-                                const parcelaReajustada = calcularParcelaReajustada(valorParcelaInicialEntrada, parcelaDoMesVenda, prazoObra, inccMensal, ipcaMensal);
-                                const valorBase = unidadesVendidasNoMes * valorParcelaInicialEntrada;
-                                const valorCorrigido = unidadesVendidasNoMes * parcelaReajustada;
-                                entradaParcelasMes += valorCorrigido;
-                                correcaoINCCMes += (valorCorrigido - valorBase);
-                            }
+                // Valor incremental do mês = diferença do que deveria ter liberado menos o que já foi liberado
+                valorLiberadoCaixaMes = Math.max(0, valorQueDeveriaTerLiberado - valorLiberadoCaixaAcumulado);
+                valorLiberadoCaixaAcumulado += valorLiberadoCaixaMes;
+            }
+            
+            // Entrada de clientes - parcelas reajustadas
+            let entradaParcelasMes = 0;
+            let correcaoINCCMes = 0;
+            if (mes <= parcelasEntrada) {
+                // Para cada mês de venda ativo, calcular as parcelas que vencem neste mês
+                for (let mesVenda = 1; mesVenda <= Math.min(mes, prazoObra); mesVenda++) {
+                    const parcelaDoMesVenda = mes - mesVenda + 1; // Qual parcela deste mês de venda
+                    if (parcelaDoMesVenda <= parcelasEntrada) {
+                        const unidadesVendidasNoMes = Math.min(vendasMes, Math.max(0, unidades - (mesVenda - 1) * vendasMes));
+                        if (unidadesVendidasNoMes > 0) {
+                            const parcelaReajustada = calcularParcelaReajustada(valorParcelaInicialEntrada, parcelaDoMesVenda, prazoObra, inccMensal, ipcaMensal);
+                            const valorBase = unidadesVendidasNoMes * valorParcelaInicialEntrada;
+                            const valorCorrigido = unidadesVendidasNoMes * parcelaReajustada;
+                            entradaParcelasMes += valorCorrigido;
+                            correcaoINCCMes += (valorCorrigido - valorBase);
                         }
                     }
                 }
-                
-                // Total do mês
-                const totalMes = valorLiberadoCaixaMes + entradaParcelasMes;
-                fluxoAcumulado += totalMes;
-                
-                // Verificar necessidade de capital de giro
-                if (fluxoAcumulado < capitalGiroMaximo) {
-                    capitalGiroMaximo = fluxoAcumulado;
-                    mesCapitalGiroMaximo = mes;
-                }
-                
-                fluxoMensal.push({
-                    mes,
-                    vendasAcumuladas,
-                    unidadesVencidasAcumuladas,
-                    percentualMedicao: percentualMedicao.toFixed(1),
-                    recebimentoCaixaMes: valorLiberadoCaixaMes,
-                    entradaParcelasMes,
-                    correcaoINCCMes,
-                    totalMes,
-                    fluxoAcumulado
-                });
             }
             
-            // Atualizar informações de capital de giro
-            document.getElementById('capitalGiroMax').textContent = formatCurrency(Math.abs(capitalGiroMaximo));
-            document.getElementById('mesCapitalGiro').textContent = `Mês ${mesCapitalGiroMaximo}`;
+            // Total do mês
+            const totalMes = valorLiberadoCaixaMes + entradaParcelasMes;
+            fluxoAcumulado += totalMes;
             
-            // Mostrar aviso se necessário capital de giro
-            document.getElementById('warningCapital').style.display = capitalGiroMaximo < 0 ? 'block' : 'none';
-            
-            // Preencher tabela de fluxo
-            preencherTabelaFluxo(fluxoMensal);
-            
-            // Gerar gráfico de fluxo de caixa
-            gerarGraficoFluxo(fluxoMensal);
-        }
-        
-        // Função auxiliar: calcular medição acumulada
-        function calcularMedicaoAcumulada(mes) {
-            let acumulado = 0;
-            for (const medicao of cronogramaMedicoes) {
-                if (mes >= medicao.fim) {
-                    acumulado += medicao.percentual;
-                } else if (mes >= medicao.inicio) {
-                    const mesesFase = medicao.fim - medicao.inicio + 1;
-                    const mesesDecorridos = mes - medicao.inicio + 1;
-                    acumulado += (medicao.percentual * mesesDecorridos) / mesesFase;
-                    break;
-                }
-            }
-            return Math.min(acumulado, 100);
-        }
-        
-        // Função auxiliar: calcular parcela reajustada
-        function calcularParcelaReajustada(valorInicial, mes, prazoObra, inccMensal, ipcaMensal) {
-            let valorReajustado = valorInicial;
-            
-            for (let i = 1; i < mes; i++) {
-                if (i <= prazoObra) {
-                    // Durante a obra: INCC
-                    valorReajustado *= (1 + inccMensal);
-                } else {
-                    // Após a obra: IPCA + 1%
-                    valorReajustado *= (1 + ipcaMensal);
-                }
+            // Verificar necessidade de capital de giro
+            if (fluxoAcumulado < capitalGiroMaximo) {
+                capitalGiroMaximo = fluxoAcumulado;
+                mesCapitalGiroMaximo = mes;
             }
             
-            return valorReajustado;
+            fluxoMensal.push({
+                mes,
+                vendasAcumuladas,
+                unidadesVencidasAcumuladas,
+                percentualMedicao: percentualMedicao.toFixed(1),
+                recebimentoCaixaMes: valorLiberadoCaixaMes,
+                entradaParcelasMes,
+                correcaoINCCMes,
+                totalMes,
+                fluxoAcumulado
+            });
         }
         
-        // Preencher tabela com os resultados
-        function preencherTabelaFluxo(fluxoMensal) {
-            const tbody = document.getElementById('fluxoTable');
-            tbody.innerHTML = '';
+        // Atualizar informações de capital de giro
+        document.getElementById('capitalGiroMax').textContent = formatCurrency(Math.abs(capitalGiroMaximo));
+        document.getElementById('mesCapitalGiro').textContent = `Mês ${mesCapitalGiroMaximo}`;
+        
+        // Mostrar aviso se necessário capital de giro
+        document.getElementById('warningCapital').style.display = capitalGiroMaximo < 0 ? 'block' : 'none';
+        
+        // Preencher tabela de fluxo
+        preencherTabelaFluxo(fluxoMensal);
+        
+        // Gerar gráfico de fluxo de caixa
+        gerarGraficoFluxo(fluxoMensal);
+    }
+    
+    // Função auxiliar: calcular medição acumulada
+    function calcularMedicaoAcumulada(mes, cronograma) {
+        let acumulado = 0;
+        for (const medicao of cronograma) {
+            if (mes >= medicao.fim) {
+                acumulado += medicao.percentual;
+            } else if (mes >= medicao.inicio) {
+                const mesesFase = medicao.fim - medicao.inicio + 1;
+                const mesesDecorridos = mes - medicao.inicio + 1;
+                acumulado += (medicao.percentual * mesesDecorridos) / mesesFase;
+                break;
+            }
+        }
+        return Math.min(acumulado, 100);
+    }
+    
+    // Função auxiliar: calcular parcela reajustada
+    function calcularParcelaReajustada(valorInicial, mes, prazoObra, inccMensal, ipcaMensal) {
+        let valorReajustado = valorInicial;
+        
+        for (let i = 1; i < mes; i++) {
+            if (i <= prazoObra) {
+                // Durante a obra: INCC
+                valorReajustado *= (1 + inccMensal);
+            } else {
+                // Após a obra: IPCA + 1%
+                valorReajustado *= (1 + ipcaMensal);
+            }
+        }
+        
+        return valorReajustado;
+    }
+    
+    // Preencher tabela com os resultados
+    function preencherTabelaFluxo(fluxoMensal) {
+        const tbody = document.getElementById('fluxoTable');
+        tbody.innerHTML = '';
+        
+        fluxoMensal.forEach(item => {
+            const row = document.createElement('tr');
             
-            fluxoMensal.forEach(item => {
-                const row = document.createElement('tr');
-                
-                // Destacar meses críticos
-                if (item.fluxoAcumulado < 0) {
-                    row.style.backgroundColor = '#fff5f5';
-                }
-                
-                row.innerHTML = `
-                    <td>${item.mes}</td>
-                    <td>${item.vendasAcumuladas}</td>
-                    <td>${item.unidadesVencidasAcumuladas}</td>
-                    <td>${item.percentualMedicao}%</td>
-                    <td class="currency ${item.recebimentoCaixaMes > 0 ? 'positive' : ''}">${formatCurrency(item.recebimentoCaixaMes)}</td>
-                    <td class="currency">${formatCurrency(item.entradaParcelasMes)}</td>
-                    <td class="currency correction-value">${formatCurrency(item.correcaoINCCMes)}</td>
-                    <td class="currency ${item.totalMes > 500000 ? 'positive' : ''}">${formatCurrency(item.totalMes)}</td>
-                    <td class="currency ${item.fluxoAcumulado < 0 ? 'negative' : ''}">${formatCurrency(item.fluxoAcumulado)}</td>
-                `;
-                
-                tbody.appendChild(row);
+            // Destacar meses críticos
+            if (item.fluxoAcumulado < 0) {
+                row.style.backgroundColor = '#fff5f5';
+            }
+            
+            row.innerHTML = `
+                <td>${item.mes}</td>
+                <td>${item.vendasAcumuladas}</td>
+                <td>${item.unidadesVencidasAcumuladas}</td>
+                <td>${item.percentualMedicao}%</td>
+                <td class="currency ${item.recebimentoCaixaMes > 0 ? 'positive' : ''}">${formatCurrency(item.recebimentoCaixaMes)}</td>
+                <td class="currency">${formatCurrency(item.entradaParcelasMes)}</td>
+                <td class="currency correction-value">${formatCurrency(item.correcaoINCCMes)}</td>
+                <td class="currency ${item.totalMes > 500000 ? 'positive' : ''}">${formatCurrency(item.totalMes)}</td>
+                <td class="currency ${item.fluxoAcumulado < 0 ? 'negative' : ''}">${formatCurrency(item.fluxoAcumulado)}</td>
+            `;
+            
+            tbody.appendChild(row);
+        });
+        
+        // Adicionar linha de total
+        const totalRow = document.createElement('tr');
+        totalRow.className = 'total-row';
+        totalRow.innerHTML = `
+            <td colspan="3">TOTAL</td>
+            <td>100%</td>
+            <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.recebimentoCaixaMes, 0))}</td>
+            <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.entradaParcelasMes, 0))}</td>
+            <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.correcaoINCCMes, 0))}</td>
+            <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.totalMes, 0))}</td>
+            <td class="currency">${formatCurrency(fluxoMensal[fluxoMensal.length-1].fluxoAcumulado)}</td>
+        `;
+        tbody.appendChild(totalRow);
+    }
+    
+    // Gerar gráfico de fluxo de caixa usando Chart.js
+    function gerarGraficoFluxo(fluxoMensal) {
+        const ctx = document.getElementById('cashFlowChart').getContext('2d');
+        
+        // Destruir gráfico existente se houver
+        if (cashFlowChart) {
+            cashFlowChart.destroy();
+        }
+        
+        // Preparar dados para o gráfico
+        const meses = fluxoMensal.map(item => `Mês ${item.mes}`);
+        const acumulado = fluxoMensal.map(item => item.fluxoAcumulado);
+        const mensal = fluxoMensal.map(item => item.totalMes);
+        const recebCaixa = fluxoMensal.map(item => item.recebimentoCaixaMes);
+        const entradaClientes = fluxoMensal.map(item => item.entradaParcelasMes);
+        const correcaoINCC = fluxoMensal.map(item => item.correcaoINCCMes);
+        
+        // Configurações do gráfico
+        const datasets = [];
+        
+        if (chartType === 'acumulado') {
+            datasets.push({
+                label: 'Fluxo Acumulado',
+                data: acumulado,
+                borderColor: '#0a4d3a',
+                backgroundColor: 'rgba(10, 77, 58, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.3
+            });
+        } else {
+            datasets.push({
+                label: 'Recebimento Caixa',
+                data: recebCaixa,
+                backgroundColor: 'rgba(0, 255, 136, 0.7)',
+                borderColor: '#0a4d3a',
+                borderWidth: 1
             });
             
-            // Adicionar linha de total
-            const totalRow = document.createElement('tr');
-            totalRow.className = 'total-row';
-            totalRow.innerHTML = `
-                <td colspan="3">TOTAL</td>
-                <td>100%</td>
-                <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.recebimentoCaixaMes, 0))}</td>
-                <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.entradaParcelasMes, 0))}</td>
-                <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.correcaoINCCMes, 0))}</td>
-                <td class="currency">${formatCurrency(fluxoMensal.reduce((acc, item) => acc + item.totalMes, 0))}</td>
-                <td class="currency">${formatCurrency(fluxoMensal[fluxoMensal.length-1].fluxoAcumulado)}</td>
-            `;
-            tbody.appendChild(totalRow);
+            datasets.push({
+                label: 'Entrada Clientes',
+                data: entradaClientes,
+                backgroundColor: 'rgba(102, 255, 170, 0.7)',
+                borderColor: '#1a5f4a',
+                borderWidth: 1
+            });
+            
+            datasets.push({
+                label: 'Correção INCC',
+                data: correcaoINCC,
+                backgroundColor: 'rgba(26, 95, 74, 0.7)',
+                borderColor: '#0a4d3a',
+                borderWidth: 1
+            });
         }
         
-        // Gerar gráfico de fluxo de caixa usando Chart.js
-        function gerarGraficoFluxo(fluxoMensal) {
-            const ctx = document.getElementById('cashFlowChart').getContext('2d');
-            
-            // Destruir gráfico existente se houver
-            if (cashFlowChart) {
-                cashFlowChart.destroy();
-            }
-            
-            // Preparar dados para o gráfico
-            const meses = fluxoMensal.map(item => `Mês ${item.mes}`);
-            const acumulado = fluxoMensal.map(item => item.fluxoAcumulado);
-            const mensal = fluxoMensal.map(item => item.totalMes);
-            const recebCaixa = fluxoMensal.map(item => item.recebimentoCaixaMes);
-            const entradaClientes = fluxoMensal.map(item => item.entradaParcelasMes);
-            const correcaoINCC = fluxoMensal.map(item => item.correcaoINCCMes);
-            
-            // Configurações do gráfico
-            const datasets = [];
-            
-            if (chartType === 'acumulado') {
-                datasets.push({
-                    label: 'Fluxo Acumulado',
-                    data: acumulado,
-                    borderColor: '#0a4d3a',
-                    backgroundColor: 'rgba(10, 77, 58, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.3
-                });
-            } else {
-                datasets.push({
-                    label: 'Recebimento Caixa',
-                    data: recebCaixa,
-                    backgroundColor: 'rgba(0, 255, 136, 0.7)',
-                    borderColor: '#0a4d3a',
-                    borderWidth: 1
-                });
-                
-                datasets.push({
-                    label: 'Entrada Clientes',
-                    data: entradaClientes,
-                    backgroundColor: 'rgba(102, 255, 170, 0.7)',
-                    borderColor: '#1a5f4a',
-                    borderWidth: 1
-                });
-                
-                datasets.push({
-                    label: 'Correção INCC',
-                    data: correcaoINCC,
-                    backgroundColor: 'rgba(26, 95, 74, 0.7)',
-                    borderColor: '#0a4d3a',
-                    borderWidth: 1
-                });
-            }
-            
-            // Criar o gráfico
-            cashFlowChart = new Chart(ctx, {
-                type: chartType === 'acumulado' ? 'line' : 'bar',
-                data: {
-                    labels: meses,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: chartType === 'acumulado' ? 'Fluxo de Caixa Acumulado' : 'Recebimentos Mensais',
-                            font: {
-                                size: 16
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += formatCurrency(context.parsed.y);
-                                    }
-                                    return label;
-                                }
-                            }
+        // Criar o gráfico
+        cashFlowChart = new Chart(ctx, {
+            type: chartType === 'acumulado' ? 'line' : 'bar',
+            data: {
+                labels: meses,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: chartType === 'acumulado' ? 'Fluxo de Caixa Acumulado' : 'Recebimentos Mensais',
+                        font: {
+                            size: 16
                         }
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return formatCurrency(value);
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
                                 }
+                                if (context.parsed.y !== null) {
+                                    label += formatCurrency(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return formatCurrency(value);
                             }
                         }
                     }
                 }
-            });
-        }
-        
-        // Mudar tipo de gráfico
-        function changeChartType(type) {
-            chartType = type;
-            
-            // Atualizar botões
-            document.querySelectorAll('.chart-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.toLowerCase() === type);
-            });
-            
-            // Regerar gráfico
-            if (cashFlowChart) {
-                gerarGraficoFluxo(cashFlowChart.data.datasets[0].data.map((_, i) => i));
             }
-        }
+        });
+    }
+    
+    // Mudar tipo de gráfico
+    function changeChartType(type) {
+        chartType = type;
         
-        // Inicializar a simulação ao carregar
-        window.onload = function() {
-            simular();
-        };
-    </script>
+        // Atualizar botões
+        document.querySelectorAll('.chart-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent.toLowerCase() === type);
+        });
+        
+        // Regerar gráfico
+        if (cashFlowChart) {
+            gerarGraficoFluxo(cashFlowChart.data.datasets[0].data.map((_, i) => i));
+        }
+    }
+    
+    // Inicializar a simulação ao carregar
+    window.onload = function() {
+        simular();
+    };
+</script>
 </body>
 </html>
